@@ -1,0 +1,142 @@
+:root {
+    --primary-color: #4a90e2;
+    --secondary-color: #f5f7fa;
+    --text-color: #333;
+    --accent-color: #ff5252;
+    --nav-bg: #ffffff;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+body { background-color: var(--secondary-color); color: var(--text-color); height: 100vh; overflow: hidden; }
+
+.hidden { display: none !important; }
+
+/* شاشة تسجيل الدخول */
+.screen { height: 100vh; display: flex; flex-direction: column; }
+#login-screen { justify-content: center; align-items: center; background: linear-gradient(135deg, #4a90e2, #9013fe); }
+
+.login-card { background: white; padding: 2rem; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); width: 90%; max-width: 400px; text-align: center; }
+.login-logo { width: 80px; margin-bottom: 1rem; }
+.input-group { position: relative; margin-bottom: 1.5rem; }
+.input-group i { position: absolute; right: 15px; top: 12px; color: #888; }
+.input-group input { width: 100%; padding: 12px 40px 12px 15px; border: 1px solid #ddd; border-radius: 10px; outline: none; }
+
+#login-btn { width: 100%; padding: 12px; background: var(--primary-color); border: none; color: white; border-radius: 10px; font-weight: bold; cursor: pointer; }
+
+/* الهيدر وشريط التنقل */
+#app-header { background: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+#content-area { flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 80px; }
+
+.bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--nav-bg); display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #eee; }
+.nav-item { display: flex; flex-direction: column; align-items: center; color: #888; cursor: pointer; transition: 0.3s; }
+.nav-item.active { color: var(--primary-color); }
+.nav-item i { font-size: 1.2rem; margin-bottom: 4px; }
+.nav-item span { font-size: 0.7rem; }
+
+
+/* إعدادات الخط العام */
+* { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+    font-family: 'Tajawal', sans-serif; /* تفعيل تيجوال */
+}
+
+body { 
+    background-color: #f8f9fa; 
+    color: #2d3436; 
+    height: 100vh; 
+    overflow: hidden; 
+}
+
+/* شاشة الدخول */
+#login-screen { 
+    background: linear-gradient(135deg, #2d3436 0%, #000000 100%); /* خلفية فخمة */
+    justify-content: center; 
+    align-items: center; 
+}
+
+.login-card { 
+    background: white; 
+    padding: 2.5rem 2rem; 
+    border-radius: 24px; 
+    width: 90%; 
+    max-width: 400px; 
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+.login-card h2 { 
+    font-weight: 800; 
+    font-size: 1.8rem; 
+    color: #1e272e;
+}
+
+.subtitle { 
+    color: #7f8c8d; 
+    font-weight: 500; 
+    margin-bottom: 25px; 
+}
+
+/* المدخلات */
+.input-group input {
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+#login-btn {
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+    background: #0984e3;
+    transition: all 0.3s ease;
+}
+
+/* القائمة السفلية */
+.nav-item span {
+    font-weight: 700; /* جعل أسماء الأقسام بارزة */
+    font-size: 0.75rem;
+}
+
+
+/* تصميم اللودر */
+.loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.9); /* خلفية شبه شفافة */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #0984e3; /* لون تيجوال الأزرق */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.loader-text {
+    font-family: 'Tajawal', sans-serif;
+    font-weight: 700;
+    color: #2d3436;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+
+
+
