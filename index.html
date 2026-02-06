@@ -2,259 +2,257 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>لوحة التحكم | كن أنت</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة التميز | منصة كن أنت</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="js/url.js"></script>
     <style>
-        :root {
-            --main-bg: #0f172a;
-            --card-bg: rgba(30, 41, 59, 0.7);
-            --accent-color: #38bdf8;
-            --text-primary: #f8fafc;
-            --text-muted: #94a3b8;
-            --danger: #ef4444;
-            --nav-bg: rgba(15, 23, 42, 0.8);
+        :root { 
+            --primary: #1e3c72; 
+            --secondary: #2a5298;
+            --accent: #f39c12; 
+            --glass: rgba(255, 255, 255, 0.85);
+            --gold-glow: rgba(243, 156, 18, 0.3);
         }
 
-        * {
-            margin: 0; padding: 0; box-sizing: border-box;
-            font-family: 'Tajawal', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        body {
-            background: var(--main-bg);
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(30, 64, 175, 0.2) 0px, transparent 50%);
-            height: 100vh;
-            color: var(--text-primary);
+        body { 
+            font-family: 'Tajawal', sans-serif; 
+            background: radial-gradient(circle at center, #2a5298 0%, #1e3c72 100%);
+            height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
             overflow: hidden;
+            position: relative;
         }
 
-        /* --- تأثير المطر الحديث (أكثر واقعية) --- */
-        .rain-layer {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 1; pointer-events: none;
+        /* --- حاوية التساقط (z-index مخصص لتكون خلف الكارد) --- */
+        #weather-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 1; 
+            pointer-events: none;
         }
+
         .drop {
-            position: absolute; width: 1px; height: 50px;
-            background: linear-gradient(transparent, rgba(255,255,255,0.3));
+            position: absolute;
+            top: -50px;
             animation: fall linear infinite;
-        }
-        @keyframes fall { to { transform: translateY(105vh); } }
-
-        /* --- الهيدر العصري --- */
-        header {
-            height: 75px;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--nav-bg);
-            backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            position: relative; z-index: 100;
+            user-select: none;
+            color: rgba(255, 255, 255, 0.7);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
 
-        .user-meta { display: flex; align-items: center; gap: 12px; }
-        .user-meta img { width: 45px; height: 45px; border-radius: 12px; border: 2px solid var(--accent-color); object-fit: cover; }
-        .page-info h1 { font-size: 1.1rem; font-weight: 900; letter-spacing: -0.5px; }
-        .page-info p { font-size: 0.75rem; color: var(--accent-color); }
-
-        .btn-exit {
-            width: 40px; height: 40px; border-radius: 12px;
-            border: none; background: rgba(239, 68, 68, 0.1);
-            color: var(--danger); font-size: 1.2rem;
-            cursor: pointer; transition: 0.3s;
+        @keyframes fall {
+            0% { transform: translateY(-50px) rotate(0deg); opacity: 0; }
+            15% { opacity: 1; }
+            85% { opacity: 1; }
+            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
         }
 
-        /* --- حاوية المحتوى --- */
-        main {
-            height: calc(100vh - 160px);
+        /* --- الحاوية الرئيسية الأصلية --- */
+        .login-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 440px;
             padding: 20px;
-            overflow-y: auto;
-            position: relative; z-index: 10;
         }
 
-        .glass-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            border-radius: 28px;
-            padding: 25px;
-            border: 1px solid rgba(255,255,255,0.08);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-            animation: cardAppear 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        @keyframes cardAppear { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-
-        /* --- القائمة السفلية (Floating Nav) --- */
-        .bottom-bar {
-            position: fixed; bottom: 20px; left: 20px; right: 20px;
-            height: 70px;
-            background: rgba(30, 41, 59, 0.9);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            border: 1px solid rgba(255,255,255,0.1);
-            z-index: 1000;
+        .login-card { 
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            padding: 3rem 2.5rem; 
+            border-radius: 30px; 
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3); 
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            animation: fadeInScale 0.8s ease-out;
         }
 
-        .nav-link {
-            display: flex; flex-direction: column; align-items: center;
-            color: var(--text-muted); text-decoration: none;
-            gap: 5px; transition: 0.3s; cursor: pointer;
+        .brand-logo { 
+            width: 100px; height: 100px;
+            border-radius: 25px;
+            margin-bottom: 1.5rem; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border: 4px solid white;
+            animation: float 4s ease-in-out infinite;
         }
-        .nav-link i { font-size: 1.4rem; }
-        .nav-link span { font-size: 0.65rem; font-weight: 700; }
-        
-        .nav-link.active { color: var(--accent-color); transform: translateY(-5px); }
-        .nav-link.active i { text-shadow: 0 0 15px var(--accent-color); }
 
-        /* --- تنسيقات البروفايل الداخلية --- */
-        .profile-header { text-align: center; margin-bottom: 25px; }
-        .profile-header img { width: 90px; height: 90px; border-radius: 50%; border: 3px solid #38bdf8; padding: 3px; }
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-        .stat-box { background: rgba(255,255,255,0.03); padding: 15px; border-radius: 18px; text-align: center; }
-        .stat-box span { display: block; font-size: 0.7rem; color: var(--text-muted); margin-bottom: 5px; }
-        .stat-box b { font-size: 1rem; color: var(--accent-color); }
+        h2 { color: var(--primary); font-size: 2rem; margin-bottom: 0.5rem; font-weight: 700; letter-spacing: -1px; }
+        .subtitle { color: #576574; font-size: 1rem; margin-bottom: 2.5rem; opacity: 0.8; }
 
-        /* تخصيص السكرول بار */
-        main::-webkit-scrollbar { width: 0; }
+        .input-group { position: relative; margin-bottom: 1.5rem; }
+        .input-group i {
+            position: absolute; right: 18px; top: 50%;
+            transform: translateY(-50%); color: var(--primary);
+            font-size: 1.2rem; transition: 0.3s;
+        }
+
+        input { 
+            width: 100%; padding: 16px 50px 16px 16px; 
+            border: 2px solid transparent; border-radius: 18px; 
+            font-family: 'Tajawal', sans-serif; font-size: 1rem;
+            background: white; transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        input:focus { 
+            outline: none; border-color: var(--accent); 
+            box-shadow: 0 0 20px var(--gold-glow);
+            transform: translateY(-2px);
+        }
+
+        .extra-options {
+            display: flex; justify-content: space-between;
+            align-items: center; margin: -0.5rem 0.5rem 1.5rem;
+            font-size: 0.9rem;
+        }
+        .remember-me { display: flex; align-items: center; gap: 8px; color: var(--primary); cursor: pointer; font-weight: 500; }
+        .remember-me input { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; }
+        .forgot-pass { color: var(--secondary); text-decoration: none; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .forgot-pass:hover { color: var(--accent); }
+
+        button { 
+            width: 100%; padding: 18px; 
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white; border: none; border-radius: 18px; 
+            cursor: pointer; font-size: 1.2rem; font-weight: 700;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            box-shadow: 0 10px 20px rgba(30, 60, 114, 0.3);
+        }
+
+        .error-msg { 
+            color: #ff4757; font-size: 0.9rem; margin-top: 1.5rem; display: none; 
+            background: rgba(255, 71, 87, 0.1); padding: 12px; border-radius: 15px;
+            border: 1px solid rgba(255, 71, 87, 0.2);
+        }
+
+        @keyframes fadeInScale { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .loader { 
+            display: none; border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid #fff; 
+            border-radius: 50%; width: 22px; height: 22px; animation: spin 0.8s linear infinite; 
+        }
+
+        .footer-text { margin-top: 2rem; font-size: 0.8rem; color: #576574; font-weight: 500; }
     </style>
 </head>
 <body>
 
-    <div class="rain-layer" id="rainLayer"></div>
+<div id="weather-canvas"></div>
 
-    <header>
-        <div class="user-meta">
-            <img src="Logo/Logos.jpg" alt="Logo" id="headerAvatar">
-            <div class="page-info">
-                <h1 id="topTitle">الملف الشخصي</h1>
-                <p id="studentName">جاري التحميل...</p>
+<div class="login-container">
+    <div class="login-card">
+        <img src="Logo/Logos.jpg" alt="Logo" class="brand-logo">
+        <h2>أهلاً بك مجدداً</h2>
+        <p class="subtitle">في منصة كن أنت التعليمية</p>
+        
+        <form id="loginForm">
+            <div class="input-group">
+                <input type="email" id="email" placeholder="البريد الإلكتروني" required>
+                <i class="fa-solid fa-user-graduate"></i>
             </div>
-        </div>
-        <button class="btn-exit" onclick="handleLogout()">
-            <i class="fa-solid fa-arrow-right-from-bracket"></i>
-        </button>
-    </header>
-
-    <main>
-        <div class="glass-card" id="displayArea">
+            
+            <div class="input-group">
+                <input type="password" id="password" placeholder="كلمة المرور" required>
+                <i class="fa-solid fa-eye" id="togglePassword" style="cursor: pointer;"></i>
             </div>
-    </main>
 
-    <nav class="bottom-bar">
-        <div class="nav-link active" onclick="navigate('profile', this)">
-            <i class="fa-solid fa-grip-vertical"></i>
-            <span>الرئيسية</span>
-        </div>
-        <div class="nav-link" onclick="navigate('homework', this)">
-            <i class="fa-solid fa-book-open-reader"></i>
-            <span>الواجبات</span>
-        </div>
-        <div class="nav-link" onclick="navigate('reports', this)">
-            <i class="fa-solid fa-chart-simple"></i>
-            <span>النتائج</span>
-        </div>
-        <div class="nav-link" onclick="navigate('tasks', this)">
-            <i class="fa-solid fa-calendar-check"></i>
-            <span>المهام</span>
-        </div>
-        <div class="nav-link" onclick="navigate('chat', this)">
-            <i class="fa-solid fa-message"></i>
-            <span>الدعم</span>
-        </div>
-    </nav>
+            <div class="extra-options">
+                <label class="remember-me">
+                    <input type="checkbox" id="rememberMe"> تذكرني
+                </label>
+                <a href="javascript:void(0)" class="forgot-pass" id="forgotPassLink">نسيت كلمة السر؟</a>
+            </div>
+            
+            <button type="submit" id="loginBtn">
+                <span>دخول للمنصة</span>
+                <div class="loader" id="loader"></div>
+            </button>
+        </form>
+        
+        <div class="error-msg" id="errorMsg"></div>
+        <p class="footer-text">نصنع المستقبل بشغف © 2026</p>
+    </div>
+</div>
 
 <script>
-    // 1. إدارة البيانات والأمان
-    const data = JSON.parse(localStorage.getItem('studentInfo'));
-    if (!data) window.location.replace("index.html");
-
-    // تحديث بيانات الهيدر فوراً
-    document.getElementById('studentName').innerText = data.nameAr || "طالب منصة كن أنت";
-
-    // 2. محرك المطر (تحسين الأداء)
-    function startRain() {
-        const layer = document.getElementById('rainLayer');
+    // --- محرك التساقط التعليمي (تم التثبيت بنجاح) ---
+    function initSnow() {
+        const container = document.getElementById('weather-canvas');
+        if(!container) return;
+        const types = ['⚛️', '🧬', 'π', '🧪', '🎓', '💡', '🔭', '💻', '🧠', '📚'];
+        const randomIcon = types[Math.floor(Math.random() * types.length)];
         for (let i = 0; i < 40; i++) {
             const drop = document.createElement('div');
             drop.className = 'drop';
+            drop.innerHTML = randomIcon;
             drop.style.left = Math.random() * 100 + 'vw';
-            drop.style.animationDuration = (Math.random() * 0.5 + 0.5) + 's';
-            drop.style.animationDelay = Math.random() * 2 + 's';
-            drop.style.opacity = Math.random() * 0.3;
-            layer.appendChild(drop);
+            drop.style.fontSize = (Math.random() * 15 + 20) + 'px';
+            drop.style.animationDuration = (Math.random() * 4 + 4) + 's';
+            drop.style.animationDelay = Math.random() * 5 + 's';
+            container.appendChild(drop);
         }
     }
+    // تشغيل فوري ومضمون
+    window.onload = initSnow;
 
-    // 3. نظام التنقل السلس
-    function navigate(view, el) {
-        // تحديث أزرار التنقل
-        document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-        el.classList.add('active');
-
-        const title = document.getElementById('topTitle');
-        const area = document.getElementById('displayArea');
-
-        // تأثير انسيابي عند التبديل
-        area.style.opacity = '0';
-        
-        setTimeout(() => {
-            switch(view) {
-                case 'profile':
-                    title.innerText = "الملف الشخصي";
-                    area.innerHTML = `
-                        <div class="profile-header">
-                            <img src="${data.imageUrl || 'Logo/user.png'}" onerror="this.src='https://ui-avatars.com/api/?name=${data.nameAr}&background=0D8ABC&color=fff'">
-                            <h2 style="margin-top:10px;">${data.nameAr}</h2>
-                            <p style="color:var(--text-muted); font-size:0.9rem;">كود الطالب: ${data.studentId}</p>
-                        </div>
-                        <div class="stats-grid">
-                            <div class="stat-box"><span>المستوى الدراسي</span><b>${data.level || 'الأول'}</b></div>
-                            <div class="stat-box"><span>حالة الحساب</span><b style="color:#10b981">نشط جداً</b></div>
-                        </div>
-                        <div style="margin-top:25px; background:rgba(255,255,255,0.02); padding:15px; border-radius:20px;">
-                            <p style="font-size:0.85rem; margin-bottom:10px;"><i class="fa fa-phone" style="color:var(--accent-color); margin-left:10px;"></i> ${data.phone || 'لا يوجد رقم'}</p>
-                            <p style="font-size:0.85rem;"><i class="fa fa-envelope" style="color:var(--accent-color); margin-left:10px;"></i> ${data.email || 'لا يوجد بريد'}</p>
-                        </div>
-                    `;
-                    break;
-                default:
-                    const names = {homework:'الواجبات اليومية', reports:'تقارير الأداء', tasks:'جدول المهام', chat:'مركز الدعم'};
-                    title.innerText = names[view];
-                    area.innerHTML = `
-                        <div style="text-align:center; padding:60px 20px;">
-                            <i class="fa-solid fa-wand-magic-sparkles" style="font-size:3rem; color:var(--accent-color); opacity:0.2; margin-bottom:20px;"></i>
-                            <h3>قريباً جداً</h3>
-                            <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px;">نحن نجهز لك تجربة تعليمية فريدة في هذا القسم.</p>
-                        </div>
-                    `;
-            }
-            area.style.opacity = '1';
-        }, 200);
+    // --- بقية الوظائف البرمجية (بدون تغيير) ---
+    if (localStorage.getItem('student_session')) {
+        window.location.href = "home.html";
     }
 
-    function handleLogout() {
-        if(confirm("هل تود الخروج من النظام؟")) {
-            localStorage.clear();
-            window.location.replace("index.html");
-        }
-    }
+    const togglePassword = document.querySelector('#togglePassword');
+    const passwordInput = document.querySelector('#password');
+    togglePassword.addEventListener('click', function() {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        this.classList.toggle('fa-eye');
+        this.classList.toggle('fa-eye-slash');
+    });
 
-    // التشغيل
-    window.onload = () => {
-        startRain();
-        navigate('profile', document.querySelector('.nav-link'));
-    };
+    document.getElementById('forgotPassLink').addEventListener('click', function() {
+        const configUrl = `${WEB_APP_URL_Main}?action=getSettings`; 
+        fetch(configUrl).then(res => res.json()).then(settings => {
+            const phoneNumber = settings.Support_Contact || "967778185189";
+            const message = "مرحباً إدارة منصة كن أنت، لقد فقدت كلمة المرور الخاصة بي.";
+            window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
+        }).catch(() => window.open("https://wa.me/967778185189", '_blank'));
+    });
+
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('loginBtn');
+        const loader = document.getElementById('loader');
+        const errorMsg = document.getElementById('errorMsg');
+        btn.disabled = true;
+        btn.querySelector('span').innerText = "جاري الدخول...";
+        loader.style.display = 'block';
+        errorMsg.style.display = 'none';
+
+        const loginUrl = `${WEB_APP_URL_Main}?action=loginStudent&email=${encodeURIComponent(document.getElementById('email').value)}&password=${encodeURIComponent(document.getElementById('password').value)}`;
+
+        fetch(loginUrl).then(res => res.json()).then(data => {
+            if (data.result === "success") {
+                localStorage.setItem('student_session', JSON.stringify(data.data));
+                window.location.href = "home.html";
+            } else { throw new Error(data.message); }
+        }).catch(err => {
+            errorMsg.innerText = "⚠️ " + (err.message || "خطأ في الاتصال");
+            errorMsg.style.display = 'block';
+            btn.disabled = false;
+            btn.querySelector('span').innerText = "دخول للمنصة";
+            loader.style.display = 'none';
+        });
+    });
 </script>
-
 </body>
 </html>
