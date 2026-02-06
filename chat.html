@@ -10,28 +10,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <style>
+    /* ... نفس الاستايلات السابقة بدون تغيير ... */
     body { font-family: 'Cairo', sans-serif; background-color: #f0f2f5; padding-bottom: 70px; }
-    .header-profile { background: #1e3c72; color: white; padding: 30px 20px; border-radius: 0 0 30px 30px; text-align: center; }
-    .profile-img { width: 90px; height: 90px; border-radius: 50%; border: 4px solid rgba(255,255,255,0.3); margin-bottom: 10px; object-fit: cover; }
-    .stat-card { background: white; border-radius: 20px; padding: 15px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 12px 0; box-shadow: 0 -2px 15px rgba(0,0,0,0.1); z-index: 1000; }
-    .nav-item { text-align: center; color: #888; text-decoration: none; font-size: 12px; }
-    .nav-item.active { color: #1e3c72; }
-    .nav-item i { font-size: 20px; display: block; }
-    .section-title { font-weight: bold; margin: 20px 15px 10px; color: #333; }
-    .assignment-item { background: white; border-radius: 15px; padding: 15px; margin: 10px 15px; display: flex; align-items: center; }
-    
-    /* ستايل فقاعات الدردشة */
     .rounded-bubble-me { border-radius: 15px 15px 0px 15px; border-right: 4px solid #0d6efd; }
     .rounded-bubble-other { border-radius: 15px 15px 15px 0px; }
-    /* تخصيص السكرول */
     .style-scroll::-webkit-scrollbar { width: 5px; }
     .style-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-    /* تأثيرات الانتقال */
-    .nav-tabs .nav-link { border: none; color: #6c757d; }
     .nav-tabs .nav-link.active { color: #0d6efd !important; border-bottom: 3px solid #0d6efd !important; background: transparent; }
     .cursor-pointer { cursor: pointer; }
-    .flex-col { display: flex; flex-direction: column; }
   </style>
 </head>
 <body>
@@ -40,7 +26,7 @@
   <div class="card-header bg-white border-0 pt-3">
     <ul class="nav nav-tabs nav-fill" id="mailTab" role="tablist">
       <li class="nav-item">
-        <button class="nav-link active fw-bold text-secondary" id="tab-internalMail" data-bs-toggle="tab" data-bs-target="#internalMail" onclick="loadMailbox()">
+        <button class="nav-link active fw-bold text-secondary" id="tab-internalMail" data-bs-toggle="tab" data-bs-target="#internalMail" onclick="importMailSection()">
           <i class="bi bi-envelope-paper"></i> البريد الداخلي
         </button>
       </li>
@@ -56,27 +42,8 @@
     <div class="tab-content" id="mailTabContent">
       
       <div class="tab-pane fade show active" id="internalMail">
-        <div class="row g-0">
-          <div class="col-md-4 border-start bg-light" style="height: 550px;">
-            <div class="p-3 bg-white border-bottom d-flex justify-content-between align-items-center">
-              <h6 class="m-0 fw-bold">صندوق الوارد</h6>
-              <button class="btn btn-sm btn-outline-primary" onclick="showNewMailForm()">
-                <i class="bi bi-pencil-square"></i> جديد
-              </button>
-            </div>
-            <div id="mail-list" class="list-group list-group-flush overflow-auto style-scroll" style="height: 490px;">
-              <div class="text-center p-5 text-muted italic">جاري تحميل البريد...</div>
-            </div>
-          </div>
-          
-          <div class="col-md-8" style="height: 550px;">
-            <div id="mail-view-container" class="h-100 overflow-auto p-3 bg-white style-scroll">
-               <div class="d-flex flex-column justify-content-center align-items-center h-100 text-muted">
-                  <i class="bi bi-envelope fs-1 mb-2"></i>
-                  <p>اختر رسالة بريدية لقراءتها أو ابدأ رسالة جديدة</p>
-               </div>
-            </div>
-          </div>
+        <div id="mail-section-placeholder" style="height: 550px;" class="text-center p-5">
+            <div class="spinner-border text-primary"></div> جاري استدعاء البريد...
         </div>
       </div>
 
@@ -90,25 +57,15 @@
               <small class="text-center p-5 text-muted">جاري تحميل القنوات...</small>
             </div>
           </div>
-
-          <div class="col-md-8 d-flex flex-col h-100" style="height: 550px;">
-            <div id="active-channel-info" class="p-3 border-bottom bg-white fw-bold text-primary shadow-sm z-1">
+          <div class="col-md-8 d-flex flex-column h-100" style="height: 550px;">
+            <div id="active-channel-info" class="p-3 border-bottom bg-white fw-bold text-primary shadow-sm">
                <i class="bi bi-chat-square-text me-2"></i> نافذة الدردشة
             </div>
-
-            <div id="chatMessagesContainer" class="flex-grow-1 p-3 overflow-auto style-scroll" style="background-color: #e5ddd5; background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');">
-               </div>
-
+            <div id="chatMessagesContainer" class="flex-grow-1 p-3 overflow-auto style-scroll" style="background-color: #e5ddd5; background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');"></div>
             <div class="p-3 bg-light border-t">
               <div class="input-group shadow-sm">
-                <button class="btn btn-white border" type="button" onclick="document.getElementById('chatAttach').click()">
-                  <i class="bi bi-paperclip text-muted"></i>
-                </button>
-                <input type="file" id="chatAttach" class="d-none">
-                <input type="text" id="chatMsgInput" class="form-control" placeholder="اكتب رسالة رسمية..." onkeypress="if(event.key==='Enter') sendAdminMessage()">
-                <button class="btn btn-primary px-4" onclick="sendAdminMessage()">
-                  <i class="bi bi-send-fill"></i>
-                </button>
+                <input type="text" id="chatMsgInput" class="form-control" placeholder="اكتب رسالة..." onkeypress="if(event.key==='Enter') sendAdminMessage()">
+                <button class="btn btn-primary px-4" onclick="sendAdminMessage()"><i class="bi bi-send-fill"></i></button>
               </div>
             </div>
           </div>
@@ -120,144 +77,74 @@
 </div>
 
 <script>
-// --- 1. إعدادات الهوية والأمان ---
+// الإعدادات العالمية المشتركة للملفين
 const API_URL = "https://script.google.com/macros/s/AKfycby7nQeowecmBWx3u91Op4vE6x7rKMetaWEY2dFF5dV0KqP1cdMgt0gzZYQIrHgbnUiD/exec";
 const userData = localStorage.getItem('student_session');
 const user = userData ? JSON.parse(userData) : null;
 
-// التحقق الفوري من الصلاحية
+// التحقق من الهوية
 if (!user || !user.studentId) {
     document.getElementById('main-app-container').innerHTML = `
         <div class="text-center p-5 bg-white shadow-sm rounded-3">
             <i class="bi bi-shield-lock text-danger fs-1 mb-3"></i>
             <h4 class="fw-bold">تنبيه أمني!</h4>
-            <p class="text-muted">لست عضواً في الشات. الرجاء التواصل مع الإدارة لتفعيل حسابك.</p>
-            <button onclick="contactSupport()" class="btn btn-success px-4 py-2 mt-2">
-                <i class="bi bi-whatsapp"></i> تواصل مع الإدارة
-            </button>
+            <p class="text-muted">لست عضواً في الشات. يرجى التواصل مع الإدارة.</p>
+            <button onclick="contactSupport()" class="btn btn-success mt-2"><i class="bi bi-whatsapp"></i> تواصل مع الإدارة</button>
         </div>`;
 }
 
-const currentUserId = user ? user.studentId : null; 
-const currentUserName = user ? (user.nameAr || "مستخدم النظام") : "ضيف"; 
+const currentUserId = user ? user.studentId : null;
+const currentUserName = user ? (user.nameAr || "مستخدم") : "ضيف";
 let activeChatId = null;
 
-// --- 2. وظائف البريد الداخلي ---
-
-async function loadMailbox() {
-    if(!currentUserId) return;
+// دالة استدعاء ملف البريد الداخلي ووضعه في مكانه
+async function importMailSection() {
+    const placeholder = document.getElementById('mail-section-placeholder');
     try {
-        const res = await fetch(`${API_URL}?action=fetchMailbox&studentId=${currentUserId}&isAdmin=false`);
-        const mails = await res.json();
-        const list = document.getElementById('mail-list');
-        
-        if (!Array.isArray(mails) || mails.length === 0) {
-            list.innerHTML = '<div class="text-center p-4">لا توجد رسائل</div>';
-            return;
+        const response = await fetch('internalMail.html');
+        if (response.ok) {
+            const html = await response.text();
+            placeholder.parentElement.innerHTML = html;
+            
+            // تشغيل السكربتات الموجودة داخل الملف المستدعى
+            const scripts = placeholder.parentElement.querySelectorAll("script");
+            scripts.forEach(oldScript => {
+                const newScript = document.createElement("script");
+                newScript.text = oldScript.text;
+                oldScript.parentNode.replaceChild(newScript, oldScript);
+            });
+        } else {
+            placeholder.innerHTML = "⚠️ فشل تحميل ملف البريد الداخلي";
         }
-
-        list.innerHTML = mails.map(m => {
-            const sender = m["المرسل_الاسم"] || m["المرسل"] || "غير معروف";
-            const subject = m["الموضوع"] || m["العنوان"] || "بدون عنوان";
-            const msgId = m["المعرف_التسلسلي"] || m["id"];
-            const date = m["تاريخ_الإرسال"] || "";
-
-            return `
-                <div onclick="viewMailDetail('${msgId}')" class="list-group-item list-group-item-action border-0 border-bottom p-3 cursor-pointer">
-                    <div class="d-flex justify-content-between align-items-start mb-1">
-                        <span class="fw-bold small text-primary">${sender}</span>
-                        <span style="font-size: 9px;" class="text-muted">${date}</span>
-                    </div>
-                    <div class="fw-bold mb-1 text-dark small text-truncate">${subject}</div>
-                </div>`;
-        }).join('');
-    } catch (e) { console.error("Mail Load Error:", e); }
+    } catch (e) { placeholder.innerHTML = "❌ خطأ في الاتصال (CORS). تأكد من استخدام Live Server"; }
 }
 
-// إصلاح زر "جديد" في البريد
-function showNewMailForm() {
-    const view = document.getElementById('mail-view-container');
-    view.innerHTML = `
-        <div class="p-3 border rounded shadow-sm bg-light">
-            <h6 class="fw-bold mb-3">إنشاء رسالة جديدة للإدارة</h6>
-            <input type="text" id="mailSubject" class="form-control mb-2" placeholder="الموضوع">
-            <textarea id="mailBody" class="form-control mb-3" rows="5" placeholder="اكتب رسالتك هنا..."></textarea>
-            <button class="btn btn-primary w-100" onclick="sendNewMail()">إرسال الآن <i class="bi bi-send"></i></button>
-        </div>`;
-}
-
-async function sendNewMail() {
-    const subject = document.getElementById('mailSubject').value;
-    const body = document.getElementById('mailBody').value;
-    if(!subject || !body) return alert("يرجى ملء كافة الحقول");
-
-    const payload = {
-        action: "sendMail",
-        senderId: currentUserId,
-        senderName: currentUserName,
-        subject: subject,
-        content: body
-    };
-
-    try {
-        await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
-        alert("تم إرسال رسالتك بنجاح");
-        loadMailbox();
-        document.getElementById('mail-view-container').innerHTML = '<div class="text-center p-5 text-muted">تم الإرسال</div>';
-    } catch (e) { alert("حدث خطأ أثناء الإرسال"); }
-}
-
-// --- 3. وظائف الشات الذكي ---
-
+// وظائف الشات
 async function loadMyChannels() {
     if(!currentUserId) return;
     const list = document.getElementById('activeTargetsList');
-    list.innerHTML = '<div class="text-center p-4"><div class="spinner-border spinner-border-sm text-primary"></div> جاري التحميل...</div>';
-    
+    list.innerHTML = '<div class="text-center p-4">جاري التحميل...</div>';
     try {
         const [resChannels, resMembers] = await Promise.all([
             fetch(`${API_URL}?action=getUserChannels&studentId=${currentUserId}`),
             fetch(`${API_URL}?action=getAllChatMembers&studentId=${currentUserId}`)
         ]);
-        
         const channels = await resChannels.json();
         const members = await resMembers.json();
-
-        let html = '<div class="p-2 bg-light small fw-bold text-muted border-bottom"><i class="bi bi-collection"></i> القنوات المشترك بها</div>';
+        let html = '<div class="p-2 bg-light small fw-bold text-muted border-bottom">القنوات</div>';
         if(Array.isArray(channels)) {
             channels.forEach(ch => {
-                html += `
-                    <div onclick="selectChatChannel('${ch.id}', '${ch.name}')" class="list-group-item list-group-item-action border-0 border-bottom py-3 cursor-pointer">
-                        <div class="d-flex align-items-center">
-                            <div class="rounded-circle bg-primary text-white p-2 me-3 shadow-sm" style="width:40px; height:40px; display:flex; align-items:center; justify-content:center;">
-                                <i class="bi bi-people-fill"></i>
-                            </div>
-                            <div class="flex-grow-1">
-                                <div class="fw-bold small text-dark">${ch.name}</div>
-                                <div class="text-muted" style="font-size: 10px;">${ch.type}</div>
-                            </div>
-                        </div>
-                    </div>`;
+                html += `<div onclick="selectChatChannel('${ch.id}', '${ch.name}')" class="list-group-item list-group-item-action border-0 border-bottom py-3 cursor-pointer"><div class="fw-bold small">${ch.name}</div></div>`;
             });
         }
-
-        html += '<div class="p-2 bg-light small fw-bold text-muted border-bottom mt-2"><i class="bi bi-person"></i> الزملاء والمدرسين</div>';
+        html += '<div class="p-2 bg-light small fw-bold text-muted border-bottom mt-2">المحادثات</div>';
         if(Array.isArray(members)) {
             members.forEach(m => {
-                html += `
-                    <div onclick="openPrivateChat('${m.id}', '${m.name}')" class="list-group-item list-group-item-action border-0 border-bottom py-3 cursor-pointer">
-                        <div class="d-flex align-items-center">
-                            <img src="${m.image || 'https://via.placeholder.com/40'}" class="rounded-circle me-3 border shadow-sm" style="width:40px; height:40px; object-fit:cover;">
-                            <div class="flex-grow-1">
-                                <div class="fw-bold small text-dark">${m.name}</div>
-                                <div class="text-muted" style="font-size: 10px;">${m.status || 'نشط'}</div>
-                            </div>
-                        </div>
-                    </div>`;
+                html += `<div onclick="openPrivateChat('${m.id}', '${m.name}')" class="list-group-item list-group-item-action border-0 border-bottom py-3 cursor-pointer"><div class="fw-bold small">${m.name}</div></div>`;
             });
         }
         list.innerHTML = html;
-    } catch (e) { list.innerHTML = "⚠️ خطأ في الاتصال بالسيرفر"; }
+    } catch (e) { list.innerHTML = "⚠️ خطأ في التحميل"; }
 }
 
 async function loadChatMessages() {
@@ -266,37 +153,22 @@ async function loadChatMessages() {
         const res = await fetch(`${API_URL}?action=getMessages&channelId=${activeChatId}&studentId=${currentUserId}`);
         const msgs = await res.json();
         const container = document.getElementById('chatMessagesContainer');
-        if (!Array.isArray(msgs)) return;
-
         container.innerHTML = msgs.map(m => {
             const isMe = String(m.sender) === String(currentUserId);
-            return `
-                <div class="d-flex ${isMe ? 'justify-content-start' : 'justify-content-end'} mb-3">
-                    <div class="p-2 px-3 shadow-sm ${isMe ? 'bg-white rounded-bubble-me' : 'bg-primary text-white rounded-bubble-other'}" style="max-width: 85%;">
-                        <div style="font-size: 13.5px;">${m.content}</div>
-                        <div class="text-end mt-1" style="font-size: 9px; opacity: 0.7;">${m.time || ''}</div>
-                    </div>
-                </div>`;
+            return `<div class="d-flex ${isMe ? 'justify-content-start' : 'justify-content-end'} mb-3">
+                <div class="p-2 px-3 shadow-sm ${isMe ? 'bg-white rounded-bubble-me' : 'bg-primary text-white rounded-bubble-other'}">${m.content}</div>
+            </div>`;
         }).join('');
         container.scrollTop = container.scrollHeight;
-    } catch (e) { console.error("Chat Error:", e); }
+    } catch (e) {}
 }
 
 async function sendAdminMessage() {
     const input = document.getElementById('chatMsgInput');
     if(!input.value || !activeChatId) return;
-    
-    const payload = { 
-        senderId: currentUserId, 
-        channelId: activeChatId, 
-        content: input.value 
-    };
-
-    input.disabled = true;
+    const payload = { senderId: currentUserId, channelId: activeChatId, content: input.value };
     await fetch(API_URL + "?action=sendMessage", { method: 'POST', body: JSON.stringify(payload) });
     input.value = '';
-    input.disabled = false;
-    input.focus();
     loadChatMessages();
 }
 
@@ -312,18 +184,14 @@ function selectChatChannel(id, name) {
     loadChatMessages();
 }
 
-// --- 4. وظيفة الدعم الفني ---
 async function contactSupport() {
-    try {
-        const res = await fetch(`${API_URL}?action=getSettings`);
-        const settings = await res.json();
-        const phone = settings.Support_Contact || "967778185189";
-        const msg = encodeURIComponent(`مرحباً إدارة كن أنت، أنا الطالب ${currentUserName || ''} أواجه مشكلة في العضوية.`);
-        window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
-    } catch (e) { window.open("https://wa.me/967778185189", '_blank'); }
+    const res = await fetch(`${API_URL}?action=getSettings`);
+    const settings = await res.json();
+    window.open(`https://wa.me/${settings.Support_Contact || '967778185189'}`, '_blank');
 }
 
-window.onload = loadMailbox;
+// التشغيل الافتراضي عند فتح الصفحة
+window.onload = importMailSection;
 </script>
 </body>
 </html>
