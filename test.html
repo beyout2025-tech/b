@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة التميز | منصة كن أنت</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #1e3c72;
+            --secondary: #2a5298;
+            --accent: #f39c12;
+            --glass: rgba(255, 255, 255, 0.95);
+            --text-main: #2d3436;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: #f0f2f5;
+            background-image: radial-gradient(circle at 0% 0%, #e9ecef 0%, #dee2e6 100%);
+            min-height: 100vh;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar Glassmorphism */
+        .sidebar {
+            background: linear-gradient(180deg, var(--primary) 0%, var(--secondary) 100%);
+            width: 280px;
+            height: 100vh;
+            position: fixed;
+            right: 0;
+            top: 0;
+            z-index: 1000;
+            box-shadow: -5px 0 25px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-brand {
+            padding: 1rem;
+            text-align: center;
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-link {
+            color: rgba(255,255,255,0.7) !important;
+            padding: 14px 20px !important;
+            margin-bottom: 8px;
+            border-radius: 15px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            transition: 0.3s all;
+            position: relative;
+        }
+
+        .nav-link i {
+            font-size: 1.2rem;
+            margin-left: 15px;
+            width: 25px;
+            text-align: center;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: white !important;
+            background: rgba(255,255,255,0.15);
+            transform: translateX(-10px);
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            width: 5px;
+            height: 20px;
+            background: var(--accent);
+            border-radius: 10px 0 0 10px;
+        }
+
+        /* Main Content */
+        .main-wrapper {
+            margin-right: 280px;
+            padding: 2rem;
+            transition: 0.4s;
+        }
+
+        /* Top Glass Header */
+        .top-header {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 1rem 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        .stat-card-mini {
+            background: #fff;
+            padding: 8px 18px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid #f0f0f0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+
+        .profile-img-header {
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            object-fit: cover;
+            border: 2px solid var(--accent);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .profile-img-header:hover { transform: rotate(5deg) scale(1.1); }
+
+        /* Content Container */
+        #dynamic-container {
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: var(--secondary); border-radius: 10px; }
+
+        .logout-btn {
+            background: rgba(231, 76, 60, 0.15);
+            color: #e74c3c !important;
+            margin-top: 2rem;
+        }
+
+        .logout-btn:hover { background: #e74c3c !important; color: white !important; }
+    </style>
+</head>
+<body>
+
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand animate__animated animate__fadeIn">
+        <img src="Logo/Logo.png" alt="Logo" style="width: 120px; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2));">
+    </div>
+    
+    <nav class="nav flex-column">
+        <a class="nav-link active" onclick="loadSection('home', this)"><i class="fas fa-th-large"></i> الرئيسية</a>
+        <a class="nav-link" onclick="loadSection('courses', this)"><i class="fas fa-graduation-cap"></i> مقرراتي التعليمية</a>
+        <a class="nav-link" onclick="loadSection('tasks', this)"><i class="fas fa-list-check"></i> المهام اليومية</a>
+        <a class="nav-link" onclick="loadSection('reports', this)"><i class="fas fa-chart-line"></i> مركز التقارير</a>
+        <a class="nav-link" onclick="loadSection('control', this)"><i class="fas fa-gamepad"></i> مركز الكنترول</a>
+        <a class="nav-link" onclick="loadSection('communication', this)"><i class="fas fa-comments"></i> النقاش والبريد</a>
+        <a class="nav-link" onclick="loadSection('achievements', this)"><i class="fas fa-award"></i> إنجازاتي</a>
+        
+        <a class="nav-link logout-btn mt-5" onclick="logout()"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a>
+    </nav>
+</aside>
+
+<div class="main-wrapper">
+    <header class="top-header d-flex justify-content-between align-items-center animate__animated animate__fadeInDown">
+        <div>
+            <span class="text-muted d-block small">مرحباً بك في عالمك</span>
+            <h4 class="mb-0 fw-bold text-dark" id="page-title" style="letter-spacing: -1px;">الرئيسية</h4>
+        </div>
+        
+        <div class="d-flex align-items-center gap-3">
+            <div class="stat-card-mini">
+                <i class="fas fa-coins text-warning"></i>
+                <div>
+                    <span class="d-block fw-bold" style="font-size: 0.9rem;" id="userPoints">2450</span>
+                    <small class="text-muted" style="font-size: 0.7rem;">نقطة تميز</small>
+                </div>
+            </div>
+
+            <div class="d-flex align-items-center gap-3 bg-light p-1 ps-3 rounded-4 border">
+                <div class="text-end">
+                    <div class="fw-bold" style="font-size: 0.9rem;" id="header-userName">جاري التحميل...</div>
+                    <span class="badge bg-primary-subtle text-primary rounded-pill" style="font-size: 0.65rem;" id="header-userLevel">المستوى 1</span>
+                </div>
+                <img id="header-userImg" src="https://via.placeholder.com/50" class="profile-img-header shadow-sm">
+            </div>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <div id="content-loader" class="text-center py-5" style="display:none;">
+            <div class="spinner-grow text-primary" role="status"></div>
+            <p class="mt-3 text-muted fw-bold">نجهز لك مساحتك...</p>
+        </div>
+        <div id="dynamic-container" class="animate__animated animate__fadeIn">
+            </div>
+    </main>
+</div>
+
+<script src="js/url.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const session = JSON.parse(localStorage.getItem('student_session'));
+        if (!session) { window.location.href = 'Login.html'; return; }
+
+        document.getElementById('header-userName').innerText = session.name;
+        document.getElementById('header-userLevel').innerText = session.level;
+        if (session.image && session.image !== "http://img.url") {
+            document.getElementById('header-userImg').src = session.image;
+        }
+
+        loadSection('home');
+    });
+
+    function loadSection(sectionName, element) {
+        const container = document.getElementById('dynamic-container');
+        const loader = document.getElementById('content-loader');
+        const pageTitle = document.getElementById('page-title');
+
+        const titles = {
+            'home': 'لوحة المعلومات',
+            'courses': 'أكاديمية التعلم',
+            'tasks': 'خطة الإنجاز اليومي',
+            'reports': 'بوصلة الأداء',
+            'control': 'مركز الكنترول الذكي',
+            'communication': 'مجتمع كن أنت',
+            'achievements': 'لوحة الشرف والشهادات'
+        };
+
+        // UI Updates
+        pageTitle.innerText = titles[sectionName] || 'بوابة الطالب';
+        if(element) {
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            element.classList.add('active');
+        }
+
+        // Animation & Fetch
+        container.style.display = 'none';
+        loader.style.display = 'block';
+
+        fetch(`sections/${sectionName}.html`)
+            .then(res => { if (!res.ok) throw new Error(); return res.text(); })
+            .then(html => {
+                setTimeout(() => { // تأخير بسيط لجمالية الأنيميشن
+                    container.innerHTML = html;
+                    loader.style.display = 'none';
+                    container.style.display = 'block';
+                    container.classList.add('animate__fadeIn');
+                }, 300);
+            })
+            .catch(() => {
+                container.innerHTML = `
+                    <div class="text-center py-5 animate__animated animate__shakeX">
+                        <i class="fas fa-tools fa-4x text-muted mb-4"></i>
+                        <h3 class="text-muted">نعمل على تطوير قسم ${titles[sectionName]}</h3>
+                        <p class="text-secondary">سيكون متاحاً قريباً جداً في تجربتكم القادمة</p>
+                    </div>`;
+                loader.style.display = 'none';
+                container.style.display = 'block';
+            });
+    }
+
+    function logout() {
+        if(confirm('هل أنت متأكد من تسجيل الخروج؟')) {
+            localStorage.clear();
+            window.location.href = 'Login.html';
+        }
+    }
+</script>
+
+</body>
+</html>

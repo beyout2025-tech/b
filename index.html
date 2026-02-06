@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>نظام إدارة الطلاب</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div id="login-screen" class="screen">
+        <div class="login-card">
+            <img src="Logo/Logo.png" alt="شعار النظام" class="login-logo">
+            <h2>مرحباً بك</h2>
+            <p class="subtitle">الرجاء تسجيل الدخول للمتابعة</p>
+            
+            <form id="login-form">
+                <div class="input-group">
+                    <i class="fa fa-envelope"></i>
+                    <input type="email" id="email" placeholder="البريد الإلكتروني" required>
+                </div>
+                <div class="input-group">
+                    <i class="fa fa-lock"></i>
+                    <input type="password" id="password" placeholder="كلمة المرور" required>
+                </div>
+                <button type="submit" id="login-btn">تسجيل الدخول</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="main-app" class="screen hidden">
+        <header id="app-header">
+            <div class="header-right">
+                <img src="Logo/Logo.png" class="header-logo" alt="logo">
+                <span id="section-title">الملف الشخصي</span>
+            </div>
+            <button id="logout-btn" title="تسجيل الخروج">
+                <i class="fa fa-right-from-bracket"></i>
+            </button>
+        </header>
+
+        <main id="content-area">
+            </main>
+
+        <nav class="bottom-nav">
+            <div class="nav-item active" data-section="profile">
+                <i class="fa-solid fa-circle-user"></i>
+                <span>البروفايل</span>
+            </div>
+            <div class="nav-item" data-section="homework">
+                <i class="fa-solid fa-book-bookmark"></i>
+                <span>الواجبات</span>
+            </div>
+            <div class="nav-item" data-section="reports">
+                <i class="fa-solid fa-clipboard-check"></i>
+                <span>التقارير</span>
+            </div>
+            <div class="nav-item" data-section="tasks">
+                <i class="fa-solid fa-list-check"></i>
+                <span>المهام</span>
+            </div>
+            <div class="nav-item" data-section="chat">
+                <i class="fa-solid fa-comments"></i>
+                <span>المراسلات</span>
+            </div>
+        </nav>
+    </div>
+<script src="js/url.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

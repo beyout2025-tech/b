@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة التميز | منصة كن أنت</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="js/url.js"></script>
+    <style>
+        :root { 
+            --primary: #1e3c72; 
+            --secondary: #2a5298;
+            --accent: #f39c12; 
+            --glass: rgba(255, 255, 255, 0.85);
+            --gold-glow: rgba(243, 156, 18, 0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body { 
+            font-family: 'Tajawal', sans-serif; 
+            background: radial-gradient(circle at center, #2a5298 0%, #1e3c72 100%);
+            height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* --- أنميشن المطر الخفيف --- */
+        .rain { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+        .drop {
+            position: absolute;
+            background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 100%);
+            width: 2px;
+            height: 80px;
+            top: -100px;
+            animation: fall 3s linear infinite;
+        }
+        @keyframes fall { to { transform: translateY(110vh); } }
+
+        /* --- الحاوية الرئيسية --- */
+        .login-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 440px;
+            padding: 20px;
+        }
+
+        .login-card { 
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            padding: 3rem 2.5rem; 
+            border-radius: 30px; 
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3); 
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            animation: fadeInScale 0.8s ease-out;
+        }
+
+        .brand-logo { 
+            width: 100px; height: 100px;
+            border-radius: 25px;
+            margin-bottom: 1.5rem; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border: 4px solid white;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        h2 { color: var(--primary); font-size: 2rem; margin-bottom: 0.5rem; font-weight: 700; letter-spacing: -1px; }
+        .subtitle { color: #576574; font-size: 1rem; margin-bottom: 2.5rem; opacity: 0.8; }
+
+        /* --- الحقول --- */
+        .input-group { position: relative; margin-bottom: 1.5rem; }
+        .input-group i {
+            position: absolute; right: 18px; top: 50%;
+            transform: translateY(-50%); color: var(--primary);
+            font-size: 1.2rem; transition: 0.3s;
+        }
+
+        input { 
+            width: 100%; padding: 16px 50px 16px 16px; 
+            border: 2px solid transparent; border-radius: 18px; 
+            font-family: 'Tajawal', sans-serif; font-size: 1rem;
+            background: white; transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        input:focus { 
+            outline: none; 
+            border-color: var(--accent); 
+            box-shadow: 0 0 20px var(--gold-glow);
+            transform: translateY(-2px);
+        }
+
+        /* --- خيارات إضافية --- */
+        .extra-options {
+            display: flex; justify-content: space-between;
+            align-items: center; margin: -0.5rem 0.5rem 1.5rem;
+            font-size: 0.9rem;
+        }
+        .remember-me { display: flex; align-items: center; gap: 8px; color: var(--primary); cursor: pointer; font-weight: 500; }
+        .remember-me input { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; }
+        .forgot-pass { color: var(--secondary); text-decoration: none; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .forgot-pass:hover { color: var(--accent); }
+
+        /* --- الزر الرئيسي --- */
+        button { 
+            width: 100%; padding: 18px; 
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white; border: none; border-radius: 18px; 
+            cursor: pointer; font-size: 1.2rem; font-weight: 700;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            box-shadow: 0 10px 20px rgba(30, 60, 114, 0.3);
+        }
+
+        button:hover { 
+            transform: scale(1.03); 
+            box-shadow: 0 15px 30px rgba(30, 60, 114, 0.4);
+            background: linear-gradient(45deg, var(--secondary), var(--primary));
+        }
+
+        .error-msg { 
+            color: #ff4757; font-size: 0.9rem; margin-top: 1.5rem; display: none; 
+            background: rgba(255, 71, 87, 0.1); padding: 12px; border-radius: 15px;
+            border: 1px solid rgba(255, 71, 87, 0.2);
+        }
+
+        /* --- الأنميشنز --- */
+        @keyframes fadeInScale { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .loader { 
+            display: none; border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid #fff; 
+            border-radius: 50%; width: 22px; height: 22px; animation: spin 0.8s linear infinite; 
+        }
+
+        .footer-text { margin-top: 2rem; font-size: 0.8rem; color: #576574; font-weight: 500; }
+    </style>
+</head>
+<body>
+
+<div class="rain" id="rainContainer"></div>
+
+<div class="login-container">
+    <div class="login-card">
+        <img src="Logo/Logos.jpg" alt="Logo" class="brand-logo">
+        <h2>أهلاً بك مجدداً</h2>
+        <p class="subtitle">في منصة كن أنت التعليمية</p>
+        
+        <form id="loginForm">
+            <div class="input-group">
+                <input type="email" id="email" placeholder="البريد الإلكتروني" required>
+                <i class="fa-solid fa-user-graduate"></i>
+            </div>
+            
+            <div class="input-group">
+                <input type="password" id="password" placeholder="كلمة المرور" required>
+                <i class="fa-solid fa-eye" id="togglePassword" style="cursor: pointer;"></i>
+            </div>
+
+            <div class="extra-options">
+                <label class="remember-me">
+                    <input type="checkbox" id="rememberMe"> تذكرني
+                </label>
+                <a href="javascript:void(0)" class="forgot-pass" id="forgotPassLink">نسيت كلمة السر؟</a>
+            </div>
+            
+            <button type="submit" id="loginBtn">
+                <span>دخول للمنصة</span>
+                <div class="loader" id="loader"></div>
+            </button>
+        </form>
+        
+        <div class="error-msg" id="errorMsg"></div>
+        <p class="footer-text">نصنع المستقبل بشغف © 2026</p>
+    </div>
+</div>
+
+<script>
+    // --- توليد قطرات المطر ---
+    const rainContainer = document.getElementById('rainContainer');
+    for (let i = 0; i < 30; i++) {
+        const drop = document.createElement('div');
+        drop.className = 'drop';
+        drop.style.left = Math.random() * 100 + '%';
+        drop.style.animationDuration = (Math.random() * 2 + 1) + 's';
+        drop.style.animationDelay = Math.random() * 2 + 's';
+        rainContainer.appendChild(drop);
+    }
+
+    // --- إظهار وإخفاء كلمة المرور ---
+    const togglePassword = document.querySelector('#togglePassword');
+    const passwordInput = document.querySelector('#password');
+    togglePassword.addEventListener('click', function() {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        this.classList.toggle('fa-eye');
+        this.classList.toggle('fa-eye-slash');
+    });
+
+    // --- وظيفة نسيت كلمة المرور (واتساب) ---
+    document.getElementById('forgotPassLink').addEventListener('click', function() {
+        const phoneNumber = "967778185189"; // استبدل XXXXXXXX برقمك الخاص بالواتساب مع كود الدولة
+        const message = "مرحباً إدارة منصة كن أنت، لقد فقدت كلمة المرور الخاصة بي وأرجو المساعدة في استعادتها.";
+        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, '_blank');
+    });
+
+    // --- معالجة الدخول ---
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('loginBtn');
+        const loader = document.getElementById('loader');
+        const errorMsg = document.getElementById('errorMsg');
+
+        btn.disabled = true;
+        btn.querySelector('span').innerText = "جاري الدخول...";
+        loader.style.display = 'block';
+        errorMsg.style.display = 'none';
+
+        const loginUrl = `${WEB_APP_URL_Main}?action=loginStudent&email=${encodeURIComponent(document.getElementById('email').value)}&password=${encodeURIComponent(document.getElementById('password').value)}`;
+
+        fetch(loginUrl)
+            .then(res => res.json())
+            .then(data => {
+                if (data.result === "success") {
+                    localStorage.setItem('student_session', JSON.stringify(data.data));
+                    window.location.href = "index.html";
+                } else {
+                    throw new Error(data.message);
+                }
+            })
+            .catch(err => {
+                errorMsg.innerText = "⚠️ " + (err.message || "خطأ في السيرفر");
+                errorMsg.style.display = 'block';
+                btn.disabled = false;
+                btn.querySelector('span').innerText = "دخول للمنصة";
+                loader.style.display = 'none';
+            });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,279 @@
+
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>بوابة الطالب</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Cairo', sans-serif; background-color: #f0f2f5; padding-bottom: 70px; }
+    .header-profile { background: #1e3c72; color: white; padding: 30px 20px; border-radius: 0 0 30px 30px; text-align: center; }
+    .profile-img { width: 90px; height: 90px; border-radius: 50%; border: 4px solid rgba(255,255,255,0.3); margin-bottom: 10px; object-fit: cover; }
+    .stat-card { background: white; border-radius: 20px; padding: 15px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 12px 0; box-shadow: 0 -2px 15px rgba(0,0,0,0.1); z-index: 1000; }
+    .nav-item { text-align: center; color: #888; text-decoration: none; font-size: 12px; }
+    .nav-item.active { color: #1e3c72; }
+    .nav-item i { font-size: 20px; display: block; }
+    .section-title { font-weight: bold; margin: 20px 15px 10px; color: #333; }
+    .assignment-item { background: white; border-radius: 15px; padding: 15px; margin: 10px 15px; display: flex; align-items: center; }
+    
+    
+/* ستايل فقاعات الدردشة */
+.rounded-bubble-me {
+    border-radius: 15px 15px 0px 15px;
+    border-right: 4px solid #0d6efd;
+}
+.rounded-bubble-other {
+    border-radius: 15px 15px 15px 0px;
+}
+/* تخصيص السكرول */
+.style-scroll::-webkit-scrollbar { width: 5px; }
+.style-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+/* تأثيرات الانتقال */
+.nav-tabs .nav-link { border: none; color: #6c757d; }
+.nav-tabs .nav-link.active { color: #0d6efd !important; border-bottom: 3px solid #0d6efd !important; background: transparent; }
+.cursor-pointer { cursor: pointer; }
+.flex-col { display: flex; flex-direction: column; }
+
+  </style>
+</head>
+<body>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+<div class="card shadow-sm border-0" dir="rtl" id="main-app-container">
+  <div class="card-header bg-white border-0 pt-3">
+    <ul class="nav nav-tabs nav-fill" id="mailTab" role="tablist">
+      <li class="nav-item">
+        <button class="nav-link active fw-bold text-secondary" id="tab-internalMail" data-bs-toggle="tab" data-bs-target="#internalMail" onclick="loadMailbox()">
+          <i class="bi bi-envelope-paper"></i> البريد الداخلي
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link fw-bold text-secondary" id="tab-smartChat" data-bs-toggle="tab" data-bs-target="#smartChat" onclick="loadMyChannels()">
+          <i class="bi bi-chat-dots"></i> إدارة الشات PRO
+        </button>
+      </li>
+    </ul>
+  </div>
+
+  <div class="card-body p-0">
+    <div class="tab-content" id="mailTabContent">
+      
+      <div class="tab-pane fade show active" id="internalMail">
+        <div class="row g-0">
+          <div class="col-md-4 border-start bg-light" style="height: 550px;">
+            <div class="p-3 bg-white border-bottom d-flex justify-content-between align-items-center">
+              <h6 class="m-0 fw-bold">صندوق الوارد</h6>
+              <button class="btn btn-sm btn-outline-primary" onclick="showNewMailForm()">
+                <i class="bi bi-pencil-square"></i> جديد
+              </button>
+            </div>
+            <div id="mail-list" class="list-group list-group-flush overflow-auto style-scroll" style="height: 490px;">
+              <div class="text-center p-5 text-muted italic">جاري تحميل البريد...</div>
+            </div>
+          </div>
+          
+          <div class="col-md-8" style="height: 550px;">
+            <div id="mail-view-container" class="h-100 overflow-auto p-3 bg-white style-scroll">
+               <div class="d-flex flex-column justify-content-center align-items-center h-100 text-muted">
+                  <i class="bi bi-envelope fs-1 mb-2"></i>
+                  <p>اختر رسالة بريدية لقراءتها أو ابدأ رسالة جديدة</p>
+               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="smartChat">
+        <div class="row g-0">
+          <div class="col-md-4 border-start bg-light" style="height: 550px;">
+            <div class="p-3 bg-white border-bottom">
+              <h6 class="m-0 fw-bold"><i class="bi bi-hash"></i> غرف الدردشة</h6>
+            </div>
+            <div id="activeTargetsList" class="list-group list-group-flush overflow-auto style-scroll" style="height: 490px;">
+              <small class="text-center p-5 text-muted">جاري تحميل القنوات...</small>
+            </div>
+          </div>
+
+          <div class="col-md-8 d-flex flex-col h-100" style="height: 550px;">
+            <div id="active-channel-info" class="p-3 border-bottom bg-white fw-bold text-primary shadow-sm z-1">
+               <i class="bi bi-chat-square-text me-2"></i> نافذة الدردشة
+            </div>
+
+            <div id="chatMessagesContainer" class="flex-grow-1 p-3 overflow-auto style-scroll" style="background-color: #e5ddd5; background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');">
+               </div>
+
+            <div class="p-3 bg-light border-t">
+              <div class="input-group shadow-sm">
+                <button class="btn btn-white border" type="button" onclick="document.getElementById('chatAttach').click()">
+                  <i class="bi bi-paperclip text-muted"></i>
+                </button>
+                <input type="file" id="chatAttach" class="d-none">
+                <input type="text" id="chatMsgInput" class="form-control" placeholder="اكتب رسالة رسمية..." onkeypress="if(event.key==='Enter') sendAdminMessage()">
+                <button class="btn btn-primary px-4" onclick="sendAdminMessage()">
+                  <i class="bi bi-send-fill"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// الإعدادات الرئيسية
+const API_URL = WEB_APP_URL_Chat;
+const currentUserId = "1001"; // يجب تمريره ديناميكياً من نظامك
+const currentUserName = "مستخدم النظام"; 
+let activeChatId = null;
+
+// ======================== وظائف البريد الداخلي ========================
+
+async function loadMailbox() {
+    try {
+        const res = await fetch(`${API_URL}?action=fetchMailbox&studentId=${currentUserId}&isAdmin=false`);
+        const mails = await res.json();
+        const list = document.getElementById('mail-list');
+        if (!mails.length) {
+            list.innerHTML = '<div class="text-center p-4">لا توجد رسائل</div>';
+            return;
+        }
+        list.innerHTML = mails.map(m => `
+            <div onclick="viewMailDetail('${m.المعرف_التسلسلي}')" class="list-group-item list-group-item-action border-0 border-bottom p-3 cursor-pointer">
+                <div class="d-flex justify-content-between align-items-start mb-1">
+                    <span class="fw-bold small text-primary">${m.المرسل_الاسم}</span>
+                    <span style="font-size: 9px;" class="text-muted">${m.تاريخ_الإرسال}</span>
+                </div>
+                <div class="fw-bold mb-1 text-dark small text-truncate">${m.الموضوع}</div>
+                <div class="small text-muted text-truncate">${m.المحتوى}</div>
+            </div>
+        `).join('');
+    } catch (e) { console.error(e); }
+}
+
+async function viewMailDetail(convId) {
+    const container = document.getElementById('mail-view-container');
+    container.innerHTML = '<div class="text-center p-5"><div class="spinner-border text-primary spinner-border-sm"></div></div>';
+    
+    try {
+        const res = await fetch(`${API_URL}?action=fetchConversationThread&conversationId=${convId}`);
+        const thread = await res.json();
+        
+        let html = `<div class="d-flex flex-column h-100">
+                    <div class="mb-4 border-bottom pb-2"><h5 class="fw-bold text-dark">${thread[0].الموضوع}</h5></div>
+                    <div class="flex-grow-1 overflow-auto pe-2">`;
+        
+        thread.forEach(msg => {
+            html += `<div class="card mb-3 border-0 shadow-sm bg-light">
+                        <div class="card-body p-3">
+                            <div class="d-flex justify-content-between small mb-2 border-bottom pb-1">
+                                <span class="fw-bold text-indigo-600">${msg.المرسل_الاسم}</span>
+                                <span class="text-muted" style="font-size:10px">${msg.تاريخ_الإرسال}</span>
+                            </div>
+                            <div class="text-dark small">${msg.المحتوى}</div>
+                        </div>
+                    </div>`;
+        });
+        
+        html += `</div>
+                 <div class="mt-3 bg-white p-2 border-top">
+                    <textarea id="mailReplyBox" class="form-control mb-2" rows="3" placeholder="اكتب ردك هنا..."></textarea>
+                    <button onclick="sendMailReply('${convId}')" class="btn btn-dark w-100 fw-bold">إرسال الرد</button>
+                 </div></div>`;
+        container.innerHTML = html;
+    } catch (e) { container.innerHTML = "خطأ في تحميل البيانات"; }
+}
+
+async function sendMailReply(convId) {
+    const content = document.getElementById('mailReplyBox').value;
+    if(!content) return;
+    
+    const replyData = {
+        senderName: currentUserName,
+        studentId: currentUserId,
+        senderType: "طالب",
+        content: content
+    };
+
+    const res = await fetch(API_URL + "?action=replyToMail", {
+        method: 'POST',
+        body: JSON.stringify({ originalMsgId: convId, replyData: replyData })
+    });
+    viewMailDetail(convId);
+}
+
+// ======================== وظائف الشات PRO ========================
+
+async function loadMyChannels() {
+    const res = await fetch(`${API_URL}?action=getUserChannels&studentId=${currentUserId}`);
+    const data = await res.json();
+    const list = document.getElementById('activeTargetsList');
+    list.innerHTML = data.map(ch => `
+        <div onclick="selectChatChannel('${ch.id}', '${ch.name}')" class="list-group-item list-group-item-action border-0 border-bottom py-3 cursor-pointer">
+            <div class="d-flex align-items-center">
+                <div class="rounded-circle bg-primary text-white p-2 me-3" style="width:35px; height:35px; display:flex; align-items:center; justify-content:center;">
+                    <i class="bi bi-people-fill small"></i>
+                </div>
+                <div>
+                    <div class="fw-bold small text-dark">${ch.name}</div>
+                    <div class="text-muted" style="font-size: 10px;">${ch.type} - ${ch.courseCode || 'عام'}</div>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+async function selectChatChannel(id, name) {
+    activeChatId = id;
+    document.getElementById('active-channel-info').innerHTML = `<i class="bi bi-hash text-primary"></i> ${name}`;
+    loadChatMessages();
+}
+
+async function loadChatMessages() {
+    if(!activeChatId) return;
+    const res = await fetch(`${API_URL}?action=getMessages&channelId=${activeChatId}&studentId=${currentUserId}`);
+    const msgs = await res.json();
+    const container = document.getElementById('chatMessagesContainer');
+    
+    container.innerHTML = msgs.reverse().map(m => {
+        const isMe = m.sender == currentUserId;
+        return `
+            <div class="d-flex ${isMe ? 'justify-content-start' : 'justify-content-end'} mb-3">
+                <div class="p-2 px-3 shadow-sm ${isMe ? 'bg-white rounded-bubble-me' : 'bg-primary text-white rounded-bubble-other'}" style="max-width: 85%;">
+                    <div style="font-size: 13.5px;">${m.content}</div>
+                    <div class="text-end mt-1" style="font-size: 9px; opacity: 0.7;">${m.time}</div>
+                </div>
+            </div>
+        `;
+    }).join('');
+    container.scrollTop = container.scrollHeight;
+}
+
+async function sendAdminMessage() {
+    const input = document.getElementById('chatMsgInput');
+    if(!input.value || !activeChatId) return;
+    
+    const payload = { action: 'sendMessage', senderId: currentUserId, channelId: activeChatId, content: input.value, attachments: [] };
+    await fetch(API_URL + "?action=sendMessage", { method: 'POST', body: JSON.stringify(payload) });
+    input.value = '';
+    loadChatMessages();
+}
+
+// تشغيل افتراضي
+loadMailbox();
+</script>
+
+
+
+
+</body>
+</html>
