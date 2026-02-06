@@ -212,25 +212,120 @@ async function sendMailReply(convId) {
 }
 
 // ======================== وظائف الشات PRO ========================
+// ======================== وظائف الشات PRO (WhatsApp Style) ========================
 
 async function loadMyChannels() {
-    const res = await fetch(`${API_URL}?action=getUserChannels&studentId=${currentUserId}`);
-    const data = await res.json();
     const list = document.getElementById('activeTargetsList');
-    list.innerHTML = data.map(ch => `
-        <div onclick="selectChatChannel('${ch.id}', '${ch.name}')" class="list-group-item list-group-item-action border-0 border-bottom py-3 cursor-pointer">
-            <div class="d-flex align-items-center">
-                <div class="rounded-circle bg-primary text-white p-2 me-3" style="width:35px; height:35px; display:flex; align-items:center; justify-content:center;">
-                    <i class="bi bi-people-fill small"></i>
-                </div>
-                <div>
-                    <div class="fw-bold small text-dark">${ch.name}</div>
-                    <div class="text-muted" style="font-size: 10px;">${ch.type} - ${ch.courseCode || 'عام'}</div>
-                </div>
-            </div>
-        </div>
-    `).join('');
+    list.innerHTML = '<div class="text-center p-4"><div class="spinner-border spinner-border-sm text-primary"></div> جاري التحميل...</div>';
+    
+    try {
+        // 1. جلب القنوات المشترك بها
+        const resChannels = await fetch(`${API_URL}?action=getUserChannels&studentId=${currentUserId}`);
+        const channels = await resChannels.json();
+        
+        // 2. جلب جميع أعضاء النظام لبدء محادثات خاصة
+        const resMembers = await fetch(`${API_URL}?action=getAllChatMembers&currentUserId=${currentUserId}`);
+        const members = await resMembers.json();
+
+        let html = '';
+
+        // قسم القنوات والمجموعات
+        html += `<div class="p-2 bg-light small fw-bold text-muted border-bottom"><i class="bi bi-collection"></i> القنوات والمجموعات</div>`;
+        channels.forEach(ch => {
+            html += `
+                <div onclick="selectChatChannel('${ch.id}', '${ch.name}', 'group')" class="list-group-item list-group-item-action border-0 border-bottom py-3 cursor-pointer">
+                    <div class="d-flex align-items-center">
+                        <div class="rounded-circle bg-primary text-white p-2 me-3 shadow-sm" style="width:40px; height:40px; display:flex; align-items:center; justify-content:center;">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="fw-bold small text-dark d-flex justify-content-between">
+                                <span>${ch.name}</span>
+                                <span class="badge bg-info" style="font-size:8px;">${ch.type}</span>
+                            </div>
+                            <div class="text-muted" style="font-size: 10px;">${ch.courseCode || 'قناة عامة'}</div>
+                        </div>
+                    </div>
+                </div>`;
+        });
+
+        // قسم المحادثات الخاصة (الأعضاء)
+        html += `<div class="p-2 bg-light small fw-bold text-muted border-bottom mt-2"><i class="bi bi-person"></i> الزملاء والموظفون</div>`;
+        members.forEach(m => {
+            html += `
+                <div onclick="openPrivateChat('${m.id}', '${m.name}')" class="list-group-item list-group-item-action border-0 border-bottom py-3 cursor-pointer">
+                    <div class="d-flex align-items-center">
+                        <div class="position-relative">
+                            <img src="${m.image || 'https://via.placeholder.com/40'}" class="rounded-circle me-3 border shadow-sm" style="width:40px; height:40px; object-fit:cover;">
+                            <span class="position-absolute bottom-0 end-0 p-1 ${m.isOnline ? 'bg-success' : 'bg-secondary'} border border-light rounded-circle" style="margin-right: 15px;"></span>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="fw-bold small text-dark">${m.name}</div>
+                            <div class="text-muted" style="font-size: 10px;">${m.status}</div>
+                        </div>
+                    </div>
+                </div>`;
+        });
+
+        list.innerHTML = html;
+    } catch (e) { list.innerHTML = "⚠️ فشل تحميل القائمة"; }
 }
+
+// دالة لفتح محادثة خاصة (مثل واتساب)
+async function openPrivateChat(targetId, targetName) {
+    // نطلب من السكربت معرف الغرفة الخاصة بيني وبين الطرف الآخر
+    const res = await fetch(`${API_URL}?action=getOrCreatePrivateChat&studentId=${currentUserId}&targetId=${targetId}`);
+    const data = await res.json();
+    selectChatChannel(data.channelId, targetName, 'private');
+}
+
+// ======================== وظائف البريد المحدثة (تتبع الحالة) ========================
+
+async function loadMailbox() {
+    try {
+        const res = await fetch(`${API_URL}?action=fetchMailbox&studentId=${currentUserId}&isAdmin=false`);
+        const mails = await res.json();
+        const list = document.getElementById('mail-list');
+        
+        list.innerHTML = mails.map(m => {
+            // منطق الأيقونات: 
+            // 1. أيقونة الاستلام (إذا كانت الحالة "تم الاستلام" أو "مقروءة")
+            const isReceived = m.الحالة !== "مرسلة";
+            const receivedIcon = isReceived ? '<i class="bi bi-check2-all text-primary" title="تم الاستلام"></i>' : '<i class="bi bi-check2 text-muted" title="جاري الإرسال"></i>';
+            
+            // 2. أيقونة الرد (إذا كان عدد الردود > 0)
+            const hasReply = parseInt(m.عدد_الردود || 0) > 0;
+            const replyBadge = hasReply ? `<span class="badge bg-success rounded-pill" style="font-size:8px;"><i class="bi bi-reply-fill"></i> يوجد رد</span>` : '';
+
+            return `
+                <div onclick="viewMailDetail('${m.المعرف_التسلسلي}')" class="list-group-item list-group-item-action border-0 border-bottom p-3 cursor-pointer">
+                    <div class="d-flex justify-content-between align-items-start mb-1">
+                        <span class="fw-bold small text-primary">${m.المرسل_الاسم}</span>
+                        <div class="d-flex gap-1 align-items-center">
+                           ${replyBadge}
+                           ${receivedIcon}
+                           <span style="font-size: 9px;" class="text-muted">${m.تاريخ_الإرسال}</span>
+                        </div>
+                    </div>
+                    <div class="fw-bold mb-1 text-dark small text-truncate">${m.الموضوع}</div>
+                    <div class="small text-muted text-truncate">${m.المحتوى}</div>
+                </div>
+            `;
+        }).join('');
+    } catch (e) { console.error(e); }
+}
+ 
+
+
+
+
+
+
+
+
+
+
+
 
 async function selectChatChannel(id, name) {
     activeChatId = id;
