@@ -13,11 +13,11 @@
             --primary: #1e3c72; 
             --secondary: #2a5298;
             --accent: #f39c12; 
-            --glass: rgba(255, 255, 255, 0.9);
+            --glass: rgba(255, 255, 255, 0.95);
             --bg-gradient: radial-gradient(circle at center, #2a5298 0%, #1e3c72 100%);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body { 
             font-family: 'Tajawal', sans-serif; 
@@ -28,80 +28,88 @@
             position: relative;
         }
 
-        /* --- نظام المطر المحسن --- */
+        /* --- تأثير المطر (خلفية) --- */
         .rain { 
-            position: fixed; /* تغيير لـ fixed لضمان التغطية */
-            top: 0; left: 0; width: 100%; height: 100%; 
-            z-index: 1; /* فوق الخلفية وتحت المحتوى */
-            pointer-events: none; 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            z-index: 0; pointer-events: none; 
         }
-
         .drop {
             position: absolute;
-            background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.6) 100%);
-            width: 2px; 
-            height: 80px; /* طول القطرة */
-            top: -100px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 100%);
+            width: 2px; height: 60px; top: -100px;
             animation: fall linear infinite;
         }
+        @keyframes fall { to { transform: translateY(110vh); } }
 
-        @keyframes fall {
-            to { transform: translateY(120vh); }
-        }
-
-        /* --- الهيدر --- */
+        /* --- الهيدر (إصلاح تداخل العناوين) --- */
         .header {
             position: relative; width: 100%; height: 70px;
             background: var(--glass); backdrop-filter: blur(10px);
             display: flex; justify-content: space-between; align-items: center;
             padding: 0 15px; z-index: 100;
             border-bottom: 2px solid var(--accent);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        .header-right { display: flex; align-items: center; gap: 10px; }
-        .header-logo { width: 40px; height: 40px; border-radius: 8px; }
-        #section-title { font-weight: 800; font-size: 1.1rem; }
+        .header-right { 
+            display: flex; align-items: center; gap: 12px; 
+            flex: 1; min-width: 0; /* يسمح للنص بالتقلص ولا يختفي */
+        }
+        
+        .header-logo { width: 42px; height: 42px; border-radius: 10px; border: 1px solid #eee; }
+
+        #section-title { 
+            font-weight: 800; font-size: 1.1rem; color: var(--primary);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
 
         #logout-btn {
             background: #ff4757; color: white; border: none;
-            width: 35px; height: 35px; border-radius: 10px; cursor: pointer;
+            width: 40px; height: 40px; border-radius: 12px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; /* يمنع الزر من الانضغاط */
         }
 
-        /* --- منطقة المحتوى --- */
+        /* --- منطقة المحتوى المحسنة --- */
         main {
             position: relative; height: calc(100vh - 145px);
-            padding: 20px; overflow-y: auto; z-index: 10;
+            padding: 15px; overflow-y: auto; z-index: 10;
         }
 
         .content-card {
             background: var(--glass); backdrop-filter: blur(15px);
-            border-radius: 25px; padding: 25px; min-height: 200px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 25px; padding: 25px; min-height: 250px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border: 1px solid rgba(255,255,255,0.5);
+            animation: fadeIn 0.4s ease;
         }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- البار السفلي --- */
+        /* --- شريط التنقل السفلي (إصلاح اللمس) --- */
         .bottom-nav {
             position: absolute; bottom: 0; width: 100%; height: 75px;
             background: var(--glass); backdrop-filter: blur(15px);
             display: flex; justify-content: space-around; align-items: center;
-            z-index: 100; border-radius: 25px 25px 0 0;
+            border-top: 1px solid rgba(0,0,0,0.05); z-index: 100;
+            border-radius: 20px 20px 0 0;
         }
 
         .nav-item {
             display: flex; flex-direction: column; align-items: center;
-            color: #7f8c8d; cursor: pointer; transition: 0.3s; gap: 4px;
+            color: #8e9eab; cursor: pointer; transition: 0.2s; 
+            flex: 1; padding: 10px 0;
         }
 
-        .nav-item.active { color: var(--accent); transform: translateY(-5px); }
-        .nav-item i { font-size: 1.2rem; }
-        .nav-item span { font-size: 0.7rem; font-weight: bold; }
+        .nav-item i { font-size: 1.4rem; margin-bottom: 4px; }
+        .nav-item span { font-size: 0.75rem; font-weight: 700; }
+        .nav-item.active { color: var(--accent); transform: translateY(-3px); }
 
-        /* --- تنسيق البروفايل داخل الكرت --- */
-        .student-profile { text-align: center; }
-        .student-img { 
-            width: 90px; height: 90px; border-radius: 50%; 
-            border: 3px solid var(--accent); margin-bottom: 10px; object-fit: cover;
+        /* --- تنسيق البروفايل --- */
+        .profile-ui { text-align: center; }
+        .profile-ui img { 
+            width: 100px; height: 100px; border-radius: 50%; 
+            border: 4px solid var(--accent); margin-bottom: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
     </style>
 </head>
@@ -111,11 +119,11 @@
 
     <header class="header">
         <div class="header-right">
-            <img src="Logo/Logos.jpg" class="header-logo" alt="logo" onerror="this.style.display='none'">
+            <img src="Logo/Logos.jpg" class="header-logo" alt="logo" onerror="this.src='https://via.placeholder.com/40'">
             <span id="section-title">الملف الشخصي</span>
         </div>
-        <button id="logout-btn" onclick="logout()">
-            <i class="fa fa-right-from-bracket"></i>
+        <button id="logout-btn" onclick="logout()" aria-label="خروج">
+            <i class="fa fa-power-off"></i>
         </button>
     </header>
 
@@ -125,118 +133,94 @@
     </main>
 
     <nav class="bottom-nav">
-        <div class="nav-item active" onclick="switchTab('profile', this)">
-            <i class="fa-solid fa-circle-user"></i>
+        <div class="nav-item active" onclick="loadPage('profile', this)">
+            <i class="fa-solid fa-user-tie"></i>
             <span>البروفايل</span>
         </div>
-        <div class="nav-item" onclick="switchTab('homework', this)">
-            <i class="fa-solid fa-book-bookmark"></i>
+        <div class="nav-item" onclick="loadPage('homework', this)">
+            <i class="fa-solid fa-book"></i>
             <span>الواجبات</span>
         </div>
-        <div class="nav-item" onclick="switchTab('reports', this)">
-            <i class="fa-solid fa-clipboard-check"></i>
+        <div class="nav-item" onclick="loadPage('reports', this)">
+            <i class="fa-solid fa-chart-line"></i>
             <span>التقارير</span>
         </div>
-        <div class="nav-item" onclick="switchTab('tasks', this)">
+        <div class="nav-item" onclick="loadPage('tasks', this)">
             <i class="fa-solid fa-list-check"></i>
             <span>المهام</span>
         </div>
-        <div class="nav-item" onclick="switchTab('chat', this)">
-            <i class="fa-solid fa-comments"></i>
-            <span>المراسلات</span>
+        <div class="nav-item" onclick="loadPage('chat', this)">
+            <i class="fa-solid fa-comment-dots"></i>
+            <span>مراسلة</span>
         </div>
     </nav>
 
 <script>
-    // جلب بيانات الطالب من التخزين المحلي
-    const studentData = JSON.parse(localStorage.getItem('studentInfo'));
+    // 1. استرجاع البيانات مع فحص الأمان
+    const student = JSON.parse(localStorage.getItem('studentInfo'));
+    if (!student) window.location.replace("index.html");
 
-    // دالة إنشاء المطر (توليد 50 قطرة بتوقيت عشوائي)
-    function initRain() {
+    // 2. دالة التنقل الرئيسية (تم إصلاحها لتعمل بالضغط)
+    function loadPage(page, element) {
+        // تحديث المظهر النشط
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        element.classList.add('active');
+
+        const title = document.getElementById('section-title');
+        const content = document.getElementById('main-content');
+
+        // تبديل المحتوى بناءً على القسم
+        switch(page) {
+            case 'profile':
+                title.innerText = "الملف الشخصي";
+                content.innerHTML = `
+                    <div class="profile-ui">
+                        <img src="${student.imageUrl || 'Logo/user.png'}" onerror="this.src='Logo/user.png'">
+                        <h2 style="color:var(--primary)">${student.nameAr || 'طالب علم'}</h2>
+                        <p style="color:var(--accent); font-weight:bold; margin-top:5px;">المستوى: ${student.level || 'غير محدد'}</p>
+                        <hr style="margin:20px 0; opacity:0.1">
+                        <div style="text-align:right; font-size:0.9rem;">
+                            <p style="margin-bottom:10px;"><i class="fa fa-fingerprint"></i> كود الطالب: ${student.studentId}</p>
+                            <p><i class="fa fa-phone"></i> الجوال: ${student.phone || 'غير مسجل'}</p>
+                        </div>
+                    </div>`;
+                break;
+            default:
+                const pagesNames = {homework:'الواجبات', reports:'التقارير', tasks:'المهام', chat:'المراسلات'};
+                title.innerText = pagesNames[page];
+                content.innerHTML = `
+                    <div style="text-align:center; padding:50px 0;">
+                        <i class="fa fa-toolbox fa-3x" style="opacity:0.2; margin-bottom:15px;"></i>
+                        <h3>قسم ${pagesNames[page]}</h3>
+                        <p style="color:#7f8c8d; margin-top:10px;">نعمل حالياً على ربط بيانات هذا القسم.</p>
+                    </div>`;
+        }
+    }
+
+    // 3. دالة المطر المحسنة
+    function createRain() {
         const container = document.getElementById('rainContainer');
-        const dropsCount = 50; // زيادة العدد ليكون التأثير واضحاً
-
-        for (let i = 0; i < dropsCount; i++) {
+        for (let i = 0; i < 40; i++) {
             const drop = document.createElement('div');
             drop.className = 'drop';
-            
-            // توزيع عشوائي عرضياً
             drop.style.left = Math.random() * 100 + '%';
-            
-            // سرعة سقوط عشوائية بين 1 و 3 ثواني
-            const duration = Math.random() * 2 + 1;
-            drop.style.animationDuration = duration + 's';
-            
-            // تأخير عشوائي للبدء لكي لا تسقط القطرات كلها معاً
-            drop.style.animationDelay = Math.random() * 5 + 's';
-            
-            // شفافية عشوائية لإعطاء عمق
-            drop.style.opacity = Math.random() * 0.5;
-
+            drop.style.animationDuration = (Math.random() * 1.5 + 1) + 's';
+            drop.style.animationDelay = Math.random() * 3 + 's';
             container.appendChild(drop);
         }
     }
 
-    // دالة التبديل بين الأقسام
-    function switchTab(section, element) {
-        // تحديث الألوان في القائمة السفلية
-        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-        element.classList.add('active');
-
-        // تحديث العنوان والمحتوى
-        const titles = {
-            'profile': 'الملف الشخصي',
-            'homework': 'الواجبات المدرسية',
-            'reports': 'تقارير الأداء',
-            'tasks': 'المهام اليومية',
-            'chat': 'المراسلات'
-        };
-        document.getElementById('section-title').innerText = titles[section];
-
-        // اختيار الدالة المناسبة للبناء
-        if (section === 'profile') renderProfile();
-        else renderPlaceholder(titles[section]);
-    }
-
-    // بناء قسم البروفايل
-    function renderProfile() {
-        if (!studentData) return;
-        const content = document.getElementById('main-content');
-        content.innerHTML = `
-            <div class="student-profile">
-                <img src="${studentData.imageUrl || 'Logo/user.png'}" class="student-img" onerror="this.src='Logo/user.png'">
-                <h3 style="color:#1e3c72;">${studentData.nameAr || 'طالب علم'}</h3>
-                <p style="color:#f39c12; font-weight:bold; margin-bottom: 15px;">المستوى: ${studentData.level || 'غير محدد'}</p>
-                <div style="text-align: right; border-top: 1px solid #eee; padding-top: 15px; font-size: 0.9rem;">
-                    <p style="margin-bottom:8px;"><i class="fa fa-id-card"></i> كود الطالب: ${studentData.studentId}</p>
-                    <p><i class="fa fa-phone"></i> الهاتف: ${studentData.phone || 'غير مسجل'}</p>
-                </div>
-            </div>
-        `;
-    }
-
-    // بناء محتوى مؤقت للأقسام الأخرى
-    function renderPlaceholder(title) {
-        document.getElementById('main-content').innerHTML = `
-            <div style="text-align:center; padding:40px; color:#95a5a6;">
-                <i class="fa fa-clock-rotate-left fa-3x" style="margin-bottom:15px; opacity:0.3;"></i>
-                <h3>قسم ${title}</h3>
-                <p>سيتم تفعيل هذا القسم وربطه ببياناتك قريباً جداً.</p>
-            </div>
-        `;
-    }
-
     function logout() {
-        if(confirm("هل تريد تسجيل الخروج؟")) {
-            localStorage.removeItem('studentInfo');
+        if(confirm("هل تريد الخروج؟")) {
+            localStorage.clear();
             window.location.replace("index.html");
         }
     }
 
-    // تشغيل النظام عند تحميل الصفحة
+    // التشغيل الأولي
     window.onload = () => {
-        initRain(); // تشغيل المطر
-        renderProfile(); // عرض البروفايل كافتراضي
+        createRain();
+        loadPage('profile', document.querySelector('.nav-item'));
     };
 </script>
 
