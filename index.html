@@ -163,7 +163,7 @@
     // --- حماية الصفحة (التأكد من تسجيل الدخول) ---
     const studentData = JSON.parse(localStorage.getItem('student_session'));
     if (!studentData) {
-        window.location.href = "Login.html"; // توجه لصفحة الدخول إذا لم يجد بيانات
+        window.location.href = "login.html"; // توجه لصفحة الدخول إذا لم يجد بيانات
     }
 
     // --- وظائف التنقل ---
@@ -202,7 +202,7 @@
     // تسجيل الخروج
     function logout() {
         localStorage.removeItem('student_session');
-        window.location.href = "Login.html";
+        window.location.href = "login.html";
     }
 
     // تشغيل قسم البروفايل تلقائياً عند الفتح
