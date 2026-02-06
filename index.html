@@ -29,7 +29,7 @@
             position: relative;
         }
 
-        /* --- أنميشن المطر (نفس نمط صفحة الدخول) --- */
+        /* --- المطر --- */
         .rain { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
         .drop {
             position: absolute;
@@ -39,70 +39,54 @@
         }
         @keyframes fall { to { transform: translateY(110vh); } }
 
-        /* --- الهيدر (العنوي) --- */
+        /* --- الهيدر المطور لمنع التآكل --- */
         header {
             position: absolute; top: 0; width: 100%; height: 70px;
             background: var(--glass); backdrop-filter: blur(10px);
             display: flex; justify-content: space-between; align-items: center;
-            padding: 0 20px; z-index: 100;
+            padding: 0 15px; z-index: 100;
             box-shadow: 0 2px 15px rgba(0,0,0,0.1);
             border-bottom: 2px solid var(--accent);
         }
 
-        .header-right { display: flex; align-items: center; gap: 12px; }
-        .header-logo { width: 45px; height: 45px; border-radius: 10px; border: 2px solid var(--primary); }
-        #section-title { font-weight: 800; font-size: 1.2rem; color: var(--primary); }
+        .header-right { 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            flex: 1; 
+            min-width: 0; 
+        }
+
+        .header-logo { width: 45px; height: 45px; border-radius: 10px; border: 2px solid var(--primary); object-fit: cover; }
+
+        #section-title { 
+            font-weight: 800; 
+            font-size: 1.1rem; 
+            color: var(--primary);
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+        }
 
         #logout-btn {
             background: #ff4757; color: white; border: none;
             width: 40px; height: 40px; border-radius: 12px;
-            cursor: pointer; transition: 0.3s;
-        }
-        #logout-btn:hover { transform: scale(1.1); background: #ff2e44; }
-
-        /* --- منطقة المحتوى المحصنة --- */
-        main {
-            position: absolute; top: 70px; bottom: 75px; width: 100%;
-            padding: 20px; overflow-y: auto; z-index: 10;
+            cursor: pointer; transition: 0.3s; flex-shrink: 0;
         }
 
-        .content-card {
-            background: var(--glass); backdrop-filter: blur(15px);
-            border-radius: 25px; padding: 25px; min-height: 200px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            border: 1px solid rgba(255,255,255,0.4);
-            animation: slideIn 0.5s ease;
-        }
-
+        /* --- المحتوى والبار السفلي --- */
+        main { position: absolute; top: 70px; bottom: 75px; width: 100%; padding: 20px; overflow-y: auto; z-index: 10; }
+        .content-card { background: var(--glass); backdrop-filter: blur(15px); border-radius: 25px; padding: 25px; min-height: 200px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.4); animation: slideIn 0.5s ease; }
         @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- البار السفلي (Bottom Nav) --- */
-        .bottom-nav {
-            position: absolute; bottom: 0; width: 100%; height: 75px;
-            background: var(--glass); backdrop-filter: blur(15px);
-            display: flex; justify-content: space-around; align-items: center;
-            border-top: 1px solid rgba(255,255,255,0.3); z-index: 100;
-            border-radius: 25px 25px 0 0;
-        }
-
-        .nav-item {
-            display: flex; flex-direction: column; align-items: center;
-            color: #7f8c8d; cursor: pointer; transition: 0.3s; gap: 5px;
-        }
-
+        .bottom-nav { position: absolute; bottom: 0; width: 100%; height: 75px; background: var(--glass); backdrop-filter: blur(15px); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid rgba(255,255,255,0.3); z-index: 100; border-radius: 25px 25px 0 0; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: #7f8c8d; cursor: pointer; transition: 0.3s; gap: 5px; }
         .nav-item i { font-size: 1.4rem; }
         .nav-item span { font-size: 0.75rem; font-weight: 600; }
-
         .nav-item.active { color: var(--accent); transform: translateY(-5px); }
-        .nav-item.active i { filter: drop-shadow(0 0 5px var(--gold-glow)); }
 
-        /* --- تنسيق البروفايل --- */
         .student-profile { text-align: center; }
-        .student-img { 
-            width: 100px; height: 100px; border-radius: 50%; 
-            border: 4px solid var(--accent); margin-bottom: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
+        .student-img { width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--accent); margin-bottom: 15px; object-fit: cover; }
     </style>
 </head>
 <body>
@@ -120,31 +104,24 @@
     </header>
 
     <main id="content-area">
-        <div class="content-card" id="main-content">
-            جاري تحميل البيانات...
-        </div>
+        <div class="content-card" id="main-content">جاري جلب بياناتك...</div>
     </main>
 
     <nav class="bottom-nav">
         <div class="nav-item active" onclick="loadSection('profile', this)">
-            <i class="fa-solid fa-circle-user"></i>
-            <span>البروفايل</span>
+            <i class="fa-solid fa-circle-user"></i><span>البروفايل</span>
         </div>
         <div class="nav-item" onclick="loadSection('homework', this)">
-            <i class="fa-solid fa-book-bookmark"></i>
-            <span>الواجبات</span>
+            <i class="fa-solid fa-book-bookmark"></i><span>الواجبات</span>
         </div>
         <div class="nav-item" onclick="loadSection('reports', this)">
-            <i class="fa-solid fa-clipboard-check"></i>
-            <span>التقارير</span>
+            <i class="fa-solid fa-clipboard-check"></i><span>التقارير</span>
         </div>
         <div class="nav-item" onclick="loadSection('tasks', this)">
-            <i class="fa-solid fa-list-check"></i>
-            <span>المهام</span>
+            <i class="fa-solid fa-list-check"></i><span>المهام</span>
         </div>
         <div class="nav-item" onclick="loadSection('chat', this)">
-            <i class="fa-solid fa-comments"></i>
-            <span>المراسلات</span>
+            <i class="fa-solid fa-comments"></i><span>المراسلات</span>
         </div>
     </nav>
 
@@ -156,19 +133,17 @@
         drop.className = 'drop';
         drop.style.left = Math.random() * 100 + '%';
         drop.style.animationDuration = (Math.random() * 2 + 2) + 's';
-        drop.appendChild(Object.assign(document.createElement('div')));
         rainContainer.appendChild(drop);
     }
 
-    // --- حماية الصفحة (التأكد من تسجيل الدخول) ---
-    const studentData = JSON.parse(localStorage.getItem('student_session'));
+    // --- تصحيح جلب البيانات (استخدام نفس المفتاح في main.js) ---
+    const studentData = JSON.parse(localStorage.getItem('studentInfo'));
+    
     if (!studentData) {
-        window.location.href = "login.html"; // توجه لصفحة الدخول إذا لم يجد بيانات
+        window.location.href = "index.html"; // العودة لصفحة الدخول
     }
 
-    // --- وظائف التنقل ---
     function loadSection(section, element) {
-        // تحديث العنوان
         const titles = {
             'profile': 'الملف الشخصي',
             'homework': 'الواجبات المدرسية',
@@ -177,37 +152,38 @@
             'chat': 'غرفة المراسلة'
         };
         document.getElementById('section-title').innerText = titles[section];
-
-        // تحديث نشاط الأزرار
         document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
         element.classList.add('active');
 
-        // تحميل المحتوى (مثال للبروفايل)
         const contentArea = document.getElementById('main-content');
+        
         if (section === 'profile') {
+            // استخدام nameAr و imageUrl كما يرسلها السيرفر
             contentArea.innerHTML = `
                 <div class="student-profile">
-                    <img src="${studentData.image || 'Logo/user.png'}" class="student-img">
-                    <h3>${studentData.name}</h3>
-                    <p>المستوى: ${studentData.level}</p>
-                    <hr style="margin: 15px 0; opacity: 0.2;">
-                    <p style="font-size: 0.9rem; color: #666;">مرحباً بك في لوحة التحكم الخاصة بك</p>
+                    <img src="${studentData.imageUrl || 'Logo/user.png'}" class="student-img" onerror="this.src='Logo/user.png'">
+                    <h3>${studentData.nameAr || 'طالب علم'}</h3>
+                    <p style="color:var(--secondary); font-weight:bold;">المستوى: ${studentData.level || 'غير محدد'}</p>
+                    <hr style="margin: 15px 0; opacity: 0.1;">
+                    <p style="font-size: 0.9rem; color: #555;">مرحباً بك في منصة "كن أنت" التعليمية</p>
                 </div>
             `;
         } else {
-            contentArea.innerHTML = `<h3>قسم ${titles[section]}</h3><p>قريباً سيتم عرض البيانات هنا...</p>`;
+            contentArea.innerHTML = `
+                <div style="text-align:center; padding: 20px;">
+                    <i class="fa-solid fa-hourglass-half" style="font-size: 3rem; color: var(--accent); margin-bottom: 15px;"></i>
+                    <h3>قسم ${titles[section]}</h3>
+                    <p>هذا القسم قيد التطوير وسيتم ربطه ببياناتك قريباً.</p>
+                </div>`;
         }
     }
 
-    // تسجيل الخروج
     function logout() {
-        localStorage.removeItem('student_session');
-        window.location.href = "login.html";
+        localStorage.removeItem('studentInfo');
+        window.location.href = "index.html";
     }
 
-    // تشغيل قسم البروفايل تلقائياً عند الفتح
     window.onload = () => loadSection('profile', document.querySelector('.nav-item'));
-
 </script>
 </body>
 </html>
