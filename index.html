@@ -7,7 +7,6 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="js/url.js"></script>
     
     <style>
         :root { 
@@ -29,53 +28,49 @@
             position: relative;
         }
 
-        /* --- أنميشن المطر المتطور --- */
-        .rain { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+        /* --- نظام المطر المحسن --- */
+        .rain { 
+            position: fixed; /* تغيير لـ fixed لضمان التغطية */
+            top: 0; left: 0; width: 100%; height: 100%; 
+            z-index: 1; /* فوق الخلفية وتحت المحتوى */
+            pointer-events: none; 
+        }
+
         .drop {
             position: absolute;
-            background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 100%);
-            width: 2px; height: 60px; top: -100px;
-            animation: fall 3s linear infinite;
+            background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.6) 100%);
+            width: 2px; 
+            height: 80px; /* طول القطرة */
+            top: -100px;
+            animation: fall linear infinite;
         }
-        @keyframes fall { to { transform: translateY(110vh); } }
 
-        /* --- الهيدر (Header) --- */
-        header {
-            position: absolute; top: 0; width: 100%; height: 70px;
+        @keyframes fall {
+            to { transform: translateY(120vh); }
+        }
+
+        /* --- الهيدر --- */
+        .header {
+            position: relative; width: 100%; height: 70px;
             background: var(--glass); backdrop-filter: blur(10px);
             display: flex; justify-content: space-between; align-items: center;
             padding: 0 15px; z-index: 100;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
             border-bottom: 2px solid var(--accent);
         }
 
-        .header-right { 
-            display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0;
-        }
-
-        .header-logo {
-            height: 45px; width: 45px; border-radius: 10px;
-            object-fit: cover; border: 2px solid var(--accent);
-        }
-
-        #section-title { 
-            font-weight: 800; font-size: 1.1rem; color: var(--primary);
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-        }
+        .header-right { display: flex; align-items: center; gap: 10px; }
+        .header-logo { width: 40px; height: 40px; border-radius: 8px; }
+        #section-title { font-weight: 800; font-size: 1.1rem; }
 
         #logout-btn {
             background: #ff4757; color: white; border: none;
-            width: 40px; height: 40px; border-radius: 12px;
-            cursor: pointer; transition: 0.3s;
-            display: flex; align-items: center; justify-content: center;
+            width: 35px; height: 35px; border-radius: 10px; cursor: pointer;
         }
-        #logout-btn:hover { transform: scale(1.1); background: #ff2e44; }
 
-        /* --- منطقة المحتوى الرئيسية --- */
+        /* --- منطقة المحتوى --- */
         main {
-            position: absolute; top: 70px; bottom: 75px; width: 100%;
+            position: relative; height: calc(100vh - 145px);
             padding: 20px; overflow-y: auto; z-index: 10;
-            -webkit-overflow-scrolling: touch;
         }
 
         .content-card {
@@ -83,68 +78,30 @@
             border-radius: 25px; padding: 25px; min-height: 200px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.2);
             border: 1px solid rgba(255,255,255,0.4);
-            animation: slideIn 0.5s ease forwards;
-            transition: opacity 0.3s ease;
         }
 
-        @keyframes slideIn { 
-            from { opacity: 0; transform: translateY(20px); } 
-            to { opacity: 1; transform: translateY(0); } 
-        }
-
-        /* --- البار السفلي (Bottom Nav) --- */
+        /* --- البار السفلي --- */
         .bottom-nav {
             position: absolute; bottom: 0; width: 100%; height: 75px;
             background: var(--glass); backdrop-filter: blur(15px);
             display: flex; justify-content: space-around; align-items: center;
-            border-top: 1px solid rgba(255,255,255,0.3); z-index: 100;
-            border-radius: 25px 25px 0 0;
+            z-index: 100; border-radius: 25px 25px 0 0;
         }
 
         .nav-item {
             display: flex; flex-direction: column; align-items: center;
-            color: #7f8c8d; cursor: pointer; transition: 0.3s; gap: 5px; flex: 1;
+            color: #7f8c8d; cursor: pointer; transition: 0.3s; gap: 4px;
         }
-
-        .nav-item i { font-size: 1.4rem; transition: 0.3s; }
-        .nav-item span { font-size: 0.7rem; font-weight: 700; }
 
         .nav-item.active { color: var(--accent); transform: translateY(-5px); }
-        .nav-item.active i { 
-            filter: drop-shadow(0 0 8px var(--accent)); 
-            animation: pulseIcon 2s infinite;
-        }
+        .nav-item i { font-size: 1.2rem; }
+        .nav-item span { font-size: 0.7rem; font-weight: bold; }
 
-        @keyframes pulseIcon {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.15); }
-            100% { transform: scale(1); }
-        }
-
-        /* --- تصميم البروفايل والأقسام --- */
+        /* --- تنسيق البروفايل داخل الكرت --- */
         .student-profile { text-align: center; }
         .student-img { 
-            width: 100px; height: 100px; border-radius: 50%; 
-            border: 4px solid var(--accent); margin-bottom: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1); object-fit: cover;
-        }
-        .level-badge {
-            background: var(--accent); color: white;
-            padding: 4px 15px; border-radius: 12px;
-            font-size: 0.85rem; font-weight: 700; display: inline-block;
-            margin-bottom: 10px;
-        }
-        .info-row {
-            display: flex; align-items: center; gap: 10px;
-            margin: 10px 0; padding: 10px;
-            background: rgba(30, 60, 114, 0.05); border-radius: 10px;
-            text-align: right; font-size: 0.9rem;
-        }
-        .empty-state {
-            text-align: center; padding: 40px 10px;
-        }
-        .empty-state i {
-            font-size: 3rem; color: var(--accent); margin-bottom: 15px; opacity: 0.8;
+            width: 90px; height: 90px; border-radius: 50%; 
+            border: 3px solid var(--accent); margin-bottom: 10px; object-fit: cover;
         }
     </style>
 </head>
@@ -152,136 +109,135 @@
 
     <div class="rain" id="rainContainer"></div>
 
-    <header id="app-header">
+    <header class="header">
         <div class="header-right">
-            <img src="Logo/Logos.jpg" class="header-logo" alt="logo" onerror="this.src='https://via.placeholder.com/50'">
-            <span id="section-title">جاري التحميل...</span>
+            <img src="Logo/Logos.jpg" class="header-logo" alt="logo" onerror="this.style.display='none'">
+            <span id="section-title">الملف الشخصي</span>
         </div>
         <button id="logout-btn" onclick="logout()">
             <i class="fa fa-right-from-bracket"></i>
         </button>
     </header>
 
-    <main id="content-area">
+    <main>
         <div class="content-card" id="main-content">
             </div>
     </main>
 
     <nav class="bottom-nav">
-        <div class="nav-item active" onclick="loadSection('profile', this)">
+        <div class="nav-item active" onclick="switchTab('profile', this)">
             <i class="fa-solid fa-circle-user"></i>
             <span>البروفايل</span>
         </div>
-        <div class="nav-item" onclick="loadSection('homework', this)">
+        <div class="nav-item" onclick="switchTab('homework', this)">
             <i class="fa-solid fa-book-bookmark"></i>
             <span>الواجبات</span>
         </div>
-        <div class="nav-item" onclick="loadSection('reports', this)">
+        <div class="nav-item" onclick="switchTab('reports', this)">
             <i class="fa-solid fa-clipboard-check"></i>
             <span>التقارير</span>
         </div>
-        <div class="nav-item" onclick="loadSection('tasks', this)">
+        <div class="nav-item" onclick="switchTab('tasks', this)">
             <i class="fa-solid fa-list-check"></i>
             <span>المهام</span>
         </div>
-        <div class="nav-item" onclick="loadSection('chat', this)">
+        <div class="nav-item" onclick="switchTab('chat', this)">
             <i class="fa-solid fa-comments"></i>
             <span>المراسلات</span>
         </div>
     </nav>
 
 <script>
-    // 1. نظام المطر
-    function createRain() {
-        const rainContainer = document.getElementById('rainContainer');
-        if (!rainContainer) return;
-        rainContainer.innerHTML = ''; // تأكيد المسح قبل البدء
-        for (let i = 0; i < 20; i++) {
+    // جلب بيانات الطالب من التخزين المحلي
+    const studentData = JSON.parse(localStorage.getItem('studentInfo'));
+
+    // دالة إنشاء المطر (توليد 50 قطرة بتوقيت عشوائي)
+    function initRain() {
+        const container = document.getElementById('rainContainer');
+        const dropsCount = 50; // زيادة العدد ليكون التأثير واضحاً
+
+        for (let i = 0; i < dropsCount; i++) {
             const drop = document.createElement('div');
             drop.className = 'drop';
+            
+            // توزيع عشوائي عرضياً
             drop.style.left = Math.random() * 100 + '%';
-            drop.style.animationDuration = (Math.random() * 2 + 2) + 's';
-            drop.style.animationDelay = Math.random() * 2 + 's';
-            rainContainer.appendChild(drop);
+            
+            // سرعة سقوط عشوائية بين 1 و 3 ثواني
+            const duration = Math.random() * 2 + 1;
+            drop.style.animationDuration = duration + 's';
+            
+            // تأخير عشوائي للبدء لكي لا تسقط القطرات كلها معاً
+            drop.style.animationDelay = Math.random() * 5 + 's';
+            
+            // شفافية عشوائية لإعطاء عمق
+            drop.style.opacity = Math.random() * 0.5;
+
+            container.appendChild(drop);
         }
     }
 
-    // 2. التحقق من البيانات
-    const studentData = JSON.parse(localStorage.getItem('studentInfo'));
+    // دالة التبديل بين الأقسام
+    function switchTab(section, element) {
+        // تحديث الألوان في القائمة السفلية
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        element.classList.add('active');
 
-    // حماية الصفحة
-    if (!studentData) {
-        window.location.replace("index.html");
-    }
-
-    // 3. وظيفة تحميل الأقسام الديناميكية
-    function loadSection(section, element) {
-        if (!studentData) return;
-
+        // تحديث العنوان والمحتوى
         const titles = {
             'profile': 'الملف الشخصي',
             'homework': 'الواجبات المدرسية',
             'reports': 'تقارير الأداء',
-            'tasks': 'قائمة المهام',
-            'chat': 'غرفة المراسلة'
+            'tasks': 'المهام اليومية',
+            'chat': 'المراسلات'
         };
-
-        // تحديث العنوان ونشاط الأزرار
         document.getElementById('section-title').innerText = titles[section];
-        document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-        if (element) element.classList.add('active');
 
-        const contentArea = document.getElementById('main-content');
-        
-        // تأثير انتقال سلس
-        contentArea.style.opacity = '0';
-
-        setTimeout(() => {
-            if (section === 'profile') {
-                contentArea.innerHTML = `
-                    <div class="student-profile">
-                        <img src="${studentData.imageUrl || 'Logo/user.png'}" class="student-img" onerror="this.src='Logo/user.png'">
-                        <h3>${studentData.nameAr || 'طالب علم'}</h3>
-                        <div class="level-badge">${studentData.level || 'المستوى غير محدد'}</div>
-                        
-                        <div class="info-row">
-                            <i class="fa fa-id-card-clip" style="color:var(--accent)"></i>
-                            <span>الرقم الأكاديمي: ${studentData.id || '---'}</span>
-                        </div>
-                        <div class="info-row">
-                            <i class="fa fa-calendar-check" style="color:var(--accent)"></i>
-                            <span>آخر ظهور: ${new Date().toLocaleDateString('ar-EG')}</span>
-                        </div>
-                        <p style="font-size: 0.8rem; color: #777; margin-top: 15px;">مرحباً بك مجدداً في رحلتك التعليمية</p>
-                    </div>
-                `;
-            } else {
-                contentArea.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fa-solid fa-screwdriver-wrench"></i>
-                        <h3>قسم ${titles[section]}</h3>
-                        <p style="color: #666; margin-top:10px;">نحن نجهز هذا القسم حالياً لربطه مع حسابك السحابي.</p>
-                    </div>`;
-            }
-            contentArea.style.opacity = '1';
-        }, 250);
+        // اختيار الدالة المناسبة للبناء
+        if (section === 'profile') renderProfile();
+        else renderPlaceholder(titles[section]);
     }
 
-    // 4. تسجيل الخروج مع تأكيد
+    // بناء قسم البروفايل
+    function renderProfile() {
+        if (!studentData) return;
+        const content = document.getElementById('main-content');
+        content.innerHTML = `
+            <div class="student-profile">
+                <img src="${studentData.imageUrl || 'Logo/user.png'}" class="student-img" onerror="this.src='Logo/user.png'">
+                <h3 style="color:#1e3c72;">${studentData.nameAr || 'طالب علم'}</h3>
+                <p style="color:#f39c12; font-weight:bold; margin-bottom: 15px;">المستوى: ${studentData.level || 'غير محدد'}</p>
+                <div style="text-align: right; border-top: 1px solid #eee; padding-top: 15px; font-size: 0.9rem;">
+                    <p style="margin-bottom:8px;"><i class="fa fa-id-card"></i> كود الطالب: ${studentData.studentId}</p>
+                    <p><i class="fa fa-phone"></i> الهاتف: ${studentData.phone || 'غير مسجل'}</p>
+                </div>
+            </div>
+        `;
+    }
+
+    // بناء محتوى مؤقت للأقسام الأخرى
+    function renderPlaceholder(title) {
+        document.getElementById('main-content').innerHTML = `
+            <div style="text-align:center; padding:40px; color:#95a5a6;">
+                <i class="fa fa-clock-rotate-left fa-3x" style="margin-bottom:15px; opacity:0.3;"></i>
+                <h3>قسم ${title}</h3>
+                <p>سيتم تفعيل هذا القسم وربطه ببياناتك قريباً جداً.</p>
+            </div>
+        `;
+    }
+
     function logout() {
-        if (confirm("هل تريد تسجيل الخروج فعلاً؟")) {
+        if(confirm("هل تريد تسجيل الخروج؟")) {
             localStorage.removeItem('studentInfo');
             window.location.replace("index.html");
         }
     }
 
-    // 5. التشغيل الأولي
-    window.addEventListener('load', () => {
-        createRain();
-        // تشغيل القسم الأول (البروفايل)
-        const profileNav = document.querySelector('.nav-item');
-        loadSection('profile', profileNav);
-    });
+    // تشغيل النظام عند تحميل الصفحة
+    window.onload = () => {
+        initRain(); // تشغيل المطر
+        renderProfile(); // عرض البروفايل كافتراضي
+    };
 </script>
 
 </body>
