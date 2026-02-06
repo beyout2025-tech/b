@@ -3,224 +3,256 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>منصة كن أنت | لوحة التحكم</title>
+    <title>لوحة التحكم | كن أنت</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     
     <style>
-        :root { 
-            --primary: #1e3c72; 
-            --secondary: #2a5298;
-            --accent: #f39c12; 
-            --glass: rgba(255, 255, 255, 0.95);
-            --bg-gradient: radial-gradient(circle at center, #2a5298 0%, #1e3c72 100%);
+        :root {
+            --main-bg: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --accent-color: #38bdf8;
+            --text-primary: #f8fafc;
+            --text-muted: #94a3b8;
+            --danger: #ef4444;
+            --nav-bg: rgba(15, 23, 42, 0.8);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-        body { 
-            font-family: 'Tajawal', sans-serif; 
-            background: var(--bg-gradient);
+        body {
+            background: var(--main-bg);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(30, 64, 175, 0.2) 0px, transparent 50%);
             height: 100vh;
-            color: var(--primary);
+            color: var(--text-primary);
             overflow: hidden;
-            position: relative;
         }
 
-        /* --- تأثير المطر (خلفية) --- */
-        .rain { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            z-index: 0; pointer-events: none; 
+        /* --- تأثير المطر الحديث (أكثر واقعية) --- */
+        .rain-layer {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1; pointer-events: none;
         }
         .drop {
-            position: absolute;
-            background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 100%);
-            width: 2px; height: 60px; top: -100px;
+            position: absolute; width: 1px; height: 50px;
+            background: linear-gradient(transparent, rgba(255,255,255,0.3));
             animation: fall linear infinite;
         }
-        @keyframes fall { to { transform: translateY(110vh); } }
+        @keyframes fall { to { transform: translateY(105vh); } }
 
-        /* --- الهيدر (إصلاح تداخل العناوين) --- */
-        .header {
-            position: relative; width: 100%; height: 70px;
-            background: var(--glass); backdrop-filter: blur(10px);
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0 15px; z-index: 100;
-            border-bottom: 2px solid var(--accent);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        /* --- الهيدر العصري --- */
+        header {
+            height: 75px;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--nav-bg);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: relative; z-index: 100;
         }
 
-        .header-right { 
-            display: flex; align-items: center; gap: 12px; 
-            flex: 1; min-width: 0; /* يسمح للنص بالتقلص ولا يختفي */
-        }
-        
-        .header-logo { width: 42px; height: 42px; border-radius: 10px; border: 1px solid #eee; }
+        .user-meta { display: flex; align-items: center; gap: 12px; }
+        .user-meta img { width: 45px; height: 45px; border-radius: 12px; border: 2px solid var(--accent-color); object-fit: cover; }
+        .page-info h1 { font-size: 1.1rem; font-weight: 900; letter-spacing: -0.5px; }
+        .page-info p { font-size: 0.75rem; color: var(--accent-color); }
 
-        #section-title { 
-            font-weight: 800; font-size: 1.1rem; color: var(--primary);
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-        }
-
-        #logout-btn {
-            background: #ff4757; color: white; border: none;
+        .btn-exit {
             width: 40px; height: 40px; border-radius: 12px;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0; /* يمنع الزر من الانضغاط */
+            border: none; background: rgba(239, 68, 68, 0.1);
+            color: var(--danger); font-size: 1.2rem;
+            cursor: pointer; transition: 0.3s;
         }
 
-        /* --- منطقة المحتوى المحسنة --- */
+        /* --- حاوية المحتوى --- */
         main {
-            position: relative; height: calc(100vh - 145px);
-            padding: 15px; overflow-y: auto; z-index: 10;
+            height: calc(100vh - 160px);
+            padding: 20px;
+            overflow-y: auto;
+            position: relative; z-index: 10;
         }
 
-        .content-card {
-            background: var(--glass); backdrop-filter: blur(15px);
-            border-radius: 25px; padding: 25px; min-height: 250px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            border: 1px solid rgba(255,255,255,0.5);
-            animation: fadeIn 0.4s ease;
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 28px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            animation: cardAppear 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes cardAppear { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
 
-        /* --- شريط التنقل السفلي (إصلاح اللمس) --- */
-        .bottom-nav {
-            position: absolute; bottom: 0; width: 100%; height: 75px;
-            background: var(--glass); backdrop-filter: blur(15px);
-            display: flex; justify-content: space-around; align-items: center;
-            border-top: 1px solid rgba(0,0,0,0.05); z-index: 100;
-            border-radius: 20px 20px 0 0;
+        /* --- القائمة السفلية (Floating Nav) --- */
+        .bottom-bar {
+            position: fixed; bottom: 20px; left: 20px; right: 20px;
+            height: 70px;
+            background: rgba(30, 41, 59, 0.9);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            z-index: 1000;
         }
 
-        .nav-item {
+        .nav-link {
             display: flex; flex-direction: column; align-items: center;
-            color: #8e9eab; cursor: pointer; transition: 0.2s; 
-            flex: 1; padding: 10px 0;
+            color: var(--text-muted); text-decoration: none;
+            gap: 5px; transition: 0.3s; cursor: pointer;
         }
+        .nav-link i { font-size: 1.4rem; }
+        .nav-link span { font-size: 0.65rem; font-weight: 700; }
+        
+        .nav-link.active { color: var(--accent-color); transform: translateY(-5px); }
+        .nav-link.active i { text-shadow: 0 0 15px var(--accent-color); }
 
-        .nav-item i { font-size: 1.4rem; margin-bottom: 4px; }
-        .nav-item span { font-size: 0.75rem; font-weight: 700; }
-        .nav-item.active { color: var(--accent); transform: translateY(-3px); }
+        /* --- تنسيقات البروفايل الداخلية --- */
+        .profile-header { text-align: center; margin-bottom: 25px; }
+        .profile-header img { width: 90px; height: 90px; border-radius: 50%; border: 3px solid #38bdf8; padding: 3px; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .stat-box { background: rgba(255,255,255,0.03); padding: 15px; border-radius: 18px; text-align: center; }
+        .stat-box span { display: block; font-size: 0.7rem; color: var(--text-muted); margin-bottom: 5px; }
+        .stat-box b { font-size: 1rem; color: var(--accent-color); }
 
-        /* --- تنسيق البروفايل --- */
-        .profile-ui { text-align: center; }
-        .profile-ui img { 
-            width: 100px; height: 100px; border-radius: 50%; 
-            border: 4px solid var(--accent); margin-bottom: 12px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
+        /* تخصيص السكرول بار */
+        main::-webkit-scrollbar { width: 0; }
     </style>
 </head>
 <body>
 
-    <div class="rain" id="rainContainer"></div>
+    <div class="rain-layer" id="rainLayer"></div>
 
-    <header class="header">
-        <div class="header-right">
-            <img src="Logo/Logos.jpg" class="header-logo" alt="logo" onerror="this.src='https://via.placeholder.com/40'">
-            <span id="section-title">الملف الشخصي</span>
+    <header>
+        <div class="user-meta">
+            <img src="Logo/Logos.jpg" alt="Logo" id="headerAvatar">
+            <div class="page-info">
+                <h1 id="topTitle">الملف الشخصي</h1>
+                <p id="studentName">جاري التحميل...</p>
+            </div>
         </div>
-        <button id="logout-btn" onclick="logout()" aria-label="خروج">
-            <i class="fa fa-power-off"></i>
+        <button class="btn-exit" onclick="handleLogout()">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
         </button>
     </header>
 
     <main>
-        <div class="content-card" id="main-content">
+        <div class="glass-card" id="displayArea">
             </div>
     </main>
 
-    <nav class="bottom-nav">
-        <div class="nav-item active" onclick="loadPage('profile', this)">
-            <i class="fa-solid fa-user-tie"></i>
-            <span>البروفايل</span>
+    <nav class="bottom-bar">
+        <div class="nav-link active" onclick="navigate('profile', this)">
+            <i class="fa-solid fa-grip-vertical"></i>
+            <span>الرئيسية</span>
         </div>
-        <div class="nav-item" onclick="loadPage('homework', this)">
-            <i class="fa-solid fa-book"></i>
+        <div class="nav-link" onclick="navigate('homework', this)">
+            <i class="fa-solid fa-book-open-reader"></i>
             <span>الواجبات</span>
         </div>
-        <div class="nav-item" onclick="loadPage('reports', this)">
-            <i class="fa-solid fa-chart-line"></i>
-            <span>التقارير</span>
+        <div class="nav-link" onclick="navigate('reports', this)">
+            <i class="fa-solid fa-chart-simple"></i>
+            <span>النتائج</span>
         </div>
-        <div class="nav-item" onclick="loadPage('tasks', this)">
-            <i class="fa-solid fa-list-check"></i>
+        <div class="nav-link" onclick="navigate('tasks', this)">
+            <i class="fa-solid fa-calendar-check"></i>
             <span>المهام</span>
         </div>
-        <div class="nav-item" onclick="loadPage('chat', this)">
-            <i class="fa-solid fa-comment-dots"></i>
-            <span>مراسلة</span>
+        <div class="nav-link" onclick="navigate('chat', this)">
+            <i class="fa-solid fa-message"></i>
+            <span>الدعم</span>
         </div>
     </nav>
 
 <script>
-    // 1. استرجاع البيانات مع فحص الأمان
-    const student = JSON.parse(localStorage.getItem('studentInfo'));
-    if (!student) window.location.replace("index.html");
+    // 1. إدارة البيانات والأمان
+    const data = JSON.parse(localStorage.getItem('studentInfo'));
+    if (!data) window.location.replace("index.html");
 
-    // 2. دالة التنقل الرئيسية (تم إصلاحها لتعمل بالضغط)
-    function loadPage(page, element) {
-        // تحديث المظهر النشط
-        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-        element.classList.add('active');
+    // تحديث بيانات الهيدر فوراً
+    document.getElementById('studentName').innerText = data.nameAr || "طالب منصة كن أنت";
 
-        const title = document.getElementById('section-title');
-        const content = document.getElementById('main-content');
-
-        // تبديل المحتوى بناءً على القسم
-        switch(page) {
-            case 'profile':
-                title.innerText = "الملف الشخصي";
-                content.innerHTML = `
-                    <div class="profile-ui">
-                        <img src="${student.imageUrl || 'Logo/user.png'}" onerror="this.src='Logo/user.png'">
-                        <h2 style="color:var(--primary)">${student.nameAr || 'طالب علم'}</h2>
-                        <p style="color:var(--accent); font-weight:bold; margin-top:5px;">المستوى: ${student.level || 'غير محدد'}</p>
-                        <hr style="margin:20px 0; opacity:0.1">
-                        <div style="text-align:right; font-size:0.9rem;">
-                            <p style="margin-bottom:10px;"><i class="fa fa-fingerprint"></i> كود الطالب: ${student.studentId}</p>
-                            <p><i class="fa fa-phone"></i> الجوال: ${student.phone || 'غير مسجل'}</p>
-                        </div>
-                    </div>`;
-                break;
-            default:
-                const pagesNames = {homework:'الواجبات', reports:'التقارير', tasks:'المهام', chat:'المراسلات'};
-                title.innerText = pagesNames[page];
-                content.innerHTML = `
-                    <div style="text-align:center; padding:50px 0;">
-                        <i class="fa fa-toolbox fa-3x" style="opacity:0.2; margin-bottom:15px;"></i>
-                        <h3>قسم ${pagesNames[page]}</h3>
-                        <p style="color:#7f8c8d; margin-top:10px;">نعمل حالياً على ربط بيانات هذا القسم.</p>
-                    </div>`;
-        }
-    }
-
-    // 3. دالة المطر المحسنة
-    function createRain() {
-        const container = document.getElementById('rainContainer');
+    // 2. محرك المطر (تحسين الأداء)
+    function startRain() {
+        const layer = document.getElementById('rainLayer');
         for (let i = 0; i < 40; i++) {
             const drop = document.createElement('div');
             drop.className = 'drop';
-            drop.style.left = Math.random() * 100 + '%';
-            drop.style.animationDuration = (Math.random() * 1.5 + 1) + 's';
-            drop.style.animationDelay = Math.random() * 3 + 's';
-            container.appendChild(drop);
+            drop.style.left = Math.random() * 100 + 'vw';
+            drop.style.animationDuration = (Math.random() * 0.5 + 0.5) + 's';
+            drop.style.animationDelay = Math.random() * 2 + 's';
+            drop.style.opacity = Math.random() * 0.3;
+            layer.appendChild(drop);
         }
     }
 
-    function logout() {
-        if(confirm("هل تريد الخروج؟")) {
+    // 3. نظام التنقل السلس
+    function navigate(view, el) {
+        // تحديث أزرار التنقل
+        document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+        el.classList.add('active');
+
+        const title = document.getElementById('topTitle');
+        const area = document.getElementById('displayArea');
+
+        // تأثير انسيابي عند التبديل
+        area.style.opacity = '0';
+        
+        setTimeout(() => {
+            switch(view) {
+                case 'profile':
+                    title.innerText = "الملف الشخصي";
+                    area.innerHTML = `
+                        <div class="profile-header">
+                            <img src="${data.imageUrl || 'Logo/user.png'}" onerror="this.src='https://ui-avatars.com/api/?name=${data.nameAr}&background=0D8ABC&color=fff'">
+                            <h2 style="margin-top:10px;">${data.nameAr}</h2>
+                            <p style="color:var(--text-muted); font-size:0.9rem;">كود الطالب: ${data.studentId}</p>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-box"><span>المستوى الدراسي</span><b>${data.level || 'الأول'}</b></div>
+                            <div class="stat-box"><span>حالة الحساب</span><b style="color:#10b981">نشط جداً</b></div>
+                        </div>
+                        <div style="margin-top:25px; background:rgba(255,255,255,0.02); padding:15px; border-radius:20px;">
+                            <p style="font-size:0.85rem; margin-bottom:10px;"><i class="fa fa-phone" style="color:var(--accent-color); margin-left:10px;"></i> ${data.phone || 'لا يوجد رقم'}</p>
+                            <p style="font-size:0.85rem;"><i class="fa fa-envelope" style="color:var(--accent-color); margin-left:10px;"></i> ${data.email || 'لا يوجد بريد'}</p>
+                        </div>
+                    `;
+                    break;
+                default:
+                    const names = {homework:'الواجبات اليومية', reports:'تقارير الأداء', tasks:'جدول المهام', chat:'مركز الدعم'};
+                    title.innerText = names[view];
+                    area.innerHTML = `
+                        <div style="text-align:center; padding:60px 20px;">
+                            <i class="fa-solid fa-wand-magic-sparkles" style="font-size:3rem; color:var(--accent-color); opacity:0.2; margin-bottom:20px;"></i>
+                            <h3>قريباً جداً</h3>
+                            <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px;">نحن نجهز لك تجربة تعليمية فريدة في هذا القسم.</p>
+                        </div>
+                    `;
+            }
+            area.style.opacity = '1';
+        }, 200);
+    }
+
+    function handleLogout() {
+        if(confirm("هل تود الخروج من النظام؟")) {
             localStorage.clear();
             window.location.replace("index.html");
         }
     }
 
-    // التشغيل الأولي
+    // التشغيل
     window.onload = () => {
-        createRain();
-        loadPage('profile', document.querySelector('.nav-item'));
+        startRain();
+        navigate('profile', document.querySelector('.nav-link'));
     };
 </script>
 
