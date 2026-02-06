@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة كن أنت | لوحة التحكم</title>
+    
+    <script src="js/url.js"></script>
+    <script>
+        // تثبيت الروابط عالمياً لضمان رؤيتها من جميع الأقسام المستدعاة
+        window.WEB_APP_URL_Main = typeof WEB_APP_URL_Main !== 'undefined' ? WEB_APP_URL_Main : "";
+        window.WEB_APP_URL_Chat = typeof WEB_APP_URL_Chat !== 'undefined' ? WEB_APP_URL_Chat : "";
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        :root { 
+            --primary: #1e3c72; --secondary: #2a5298; --accent: #f39c12; 
+            --glass: rgba(255, 255, 255, 0.9);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body { 
+            font-family: 'Tajawal', sans-serif; 
+            background: radial-gradient(circle at center, #2a5298 0%, #1e3c72 100%);
+            min-height: 100vh; overflow: hidden;
+        }
+
+        #weather-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+        .drop { position: absolute; top: -50px; animation: fall linear infinite; color: rgba(255,255,255,0.4); font-size: 1.2rem; }
+        @keyframes fall { 0% { transform: translateY(-50px); opacity: 0; } 10% { opacity: 1; } 100% { transform: translateY(110vh); opacity: 0; } }
+
+        header { 
+            position: fixed; top: 0; width: 100%; z-index: 100; padding: 15px 20px;
+            background: var(--glass); backdrop-filter: blur(10px);
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        #main-content {
+            position: absolute; top: 80px; bottom: 70px;
+            width: 100%; overflow-y: auto; padding: 20px; z-index: 10;
+        }
+
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%; height: 70px;
+            background: var(--glass); backdrop-filter: blur(15px);
+            display: flex; justify-content: space-around; align-items: center;
+            border-top: 1px solid rgba(255,255,255,0.3); z-index: 100;
+        }
+
+        .nav-item { 
+            display: flex; flex-direction: column; align-items: center; 
+            color: #576574; cursor: pointer; transition: 0.3s; font-size: 0.8rem;
+        }
+        .nav-item i { font-size: 1.4rem; margin-bottom: 4px; }
+        .nav-item.active { color: var(--accent); transform: translateY(-5px); font-weight: bold; }
+
+        .dashboard-home { animation: fadeIn 0.5s ease; }
+        .stat-card { background: white; padding: 20px; border-radius: 15px; margin-bottom: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<div id="weather-canvas"></div>
+
+<header>
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <img src="Logo/Logos.jpg" style="width: 40px; border-radius: 10px;" onerror="this.src='https://via.placeholder.com/40'">
+        <h4 id="page-title">الرئيسية</h4>
+    </div>
+    <button onclick="logout()" style="background: none; border: none; color: #ff4757; font-size: 1.2rem; cursor: pointer;"><i class="fa-solid fa-power-off"></i></button>
+</header>
+
+<div id="main-content">
+    <div id="default-home" class="dashboard-home">
+        <h2 style="color: white; text-align: center; margin-bottom: 20px;">مرحباً بك، <span id="user-name">طالبنا</span></h2>
+        <div class="stat-card"><h3>إنجازاتك اليوم</h3><p>تفقد قسم المهام لمتابعة دروسك</p></div>
+    </div>
+</div>
+
+<nav class="bottom-nav">
+    <div class="nav-item active" onclick="loadSection('home', this)">
+        <i class="fa-solid fa-house"></i><span>الرئيسية</span>
+    </div>
+    <div class="nav-item" onclick="loadSection('tasks', this)">
+        <i class="fa-solid fa-list-check"></i><span>المهام</span>
+    </div>
+    <div class="nav-item" onclick="loadSection('reports', this)">
+        <i class="fa-solid fa-chart-pie"></i><span>التقارير</span>
+    </div>
+    <div class="nav-item" onclick="loadSection('chat', this)">
+        <i class="fa-solid fa-comments"></i><span>المراسلات</span>
+    </div>
+</nav>
+
+<script>
+    const userData = localStorage.getItem('student_session');
+    const user = userData ? JSON.parse(userData) : null;
+
+    window.onload = function() {
+        if(user) {
+            document.getElementById('user-name').innerText = user.nameAr ? user.nameAr.split(' ')[0] : "طالبنا";
+        }
+        initSnow();
+    };
+
+    async function loadSection(sectionName, element) {
+        const contentDiv = document.getElementById('main-content');
+        const title = document.getElementById('page-title');
+        
+        document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+        if(element) element.classList.add('active');
+
+        if (sectionName === 'home') {
+            title.innerText = "الرئيسية";
+            contentDiv.innerHTML = `
+                <div id="default-home" class="dashboard-home">
+                    <h2 style="color: white; text-align: center; margin-bottom: 20px;">مرحباً بك، <span id="user-name">${user ? (user.nameAr ? user.nameAr.split(' ')[0] : 'طالبنا') : 'طالبنا'}</span></h2>
+                    <div class="stat-card"><h3>إنجازاتك اليوم</h3><p>تفقد قسم المهام لمتابعة دروسك</p></div>
+                </div>`;
+            return;
+        }
+
+        title.innerText = element ? element.querySelector('span').innerText : "جاري التحميل...";
+        contentDiv.innerHTML = `<div style="text-align:center; color:white; margin-top:50px;"><i class="fa-solid fa-sync fa-spin"></i> جاري جلب البيانات...</div>`;
+
+        try {
+            const response = await fetch(`${sectionName}.html`);
+            if (response.ok) {
+                const html = await response.text();
+                contentDiv.innerHTML = html;
+
+                // إعادة تشغيل السكربتات بداخل المحتوى المستدعى
+                const scripts = contentDiv.querySelectorAll("script");
+                scripts.forEach(oldScript => {
+                    const newScript = document.createElement("script");
+                    Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+                    newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+                    oldScript.parentNode.replaceChild(newScript, oldScript);
+                });
+            } else {
+                contentDiv.innerHTML = `<div class="stat-card">⚠️ الملف [${sectionName}.html] غير موجود</div>`;
+            }
+        } catch (error) {
+            contentDiv.innerHTML = `<div class="stat-card">❌ خطأ في التحميل (CORS Error). استخدم Live Server.</div>`;
+        }
+    }
+
+    function switchTab(tabId, btn) {
+        const parent = btn.closest('.tab-container') || document;
+        parent.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+        parent.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        const target = document.getElementById(tabId);
+        if(target) target.style.display = 'block';
+        btn.classList.add('active');
+    }
+
+    function logout() {
+        localStorage.removeItem('student_session');
+        window.location.href = "index.html";
+    }
+
+    function initSnow() {
+        const container = document.getElementById('weather-canvas');
+        if(!container) return;
+        const icons = ['⚛️', '🧬', '🧪', '💡'];
+        for (let i = 0; i < 25; i++) {
+            const drop = document.createElement('div');
+            drop.className = 'drop';
+            drop.innerHTML = icons[Math.floor(Math.random()*icons.length)];
+            drop.style.left = Math.random() * 100 + 'vw';
+            drop.style.animationDuration = (Math.random() * 5 + 5) + 's';
+            drop.style.fontSize = (Math.random() * 10 + 15) + 'px';
+            container.appendChild(drop);
+        }
+    }
+</script>
+
+
+</body>
+</html>
