@@ -1,0 +1,47 @@
+<div class="dashboard-home">
+    <div class="stat-card" style="background: var(--primary); color: white;">
+        <i class="fa-solid fa-book-open" style="font-size: 2rem; margin-bottom: 10px;"></i>
+        <h4>قائمة المهام والواجبات</h4>
+        <p id="course-name-display">جاري تحديد الدورة...</p>
+    </div>
+
+    <div id="tasks-list">
+        <div style="text-align:center; padding: 20px;">
+            <i class="fa-solid fa-spinner fa-spin"></i> جاري جلب المهام...
+        </div>
+    </div>
+</div>
+
+<script>
+    (async function initTasks() {
+        const student = JSON.parse(localStorage.getItem('student_session'));
+        if (!student || !student.courseId) return;
+
+        try {
+            const response = await fetch(`${WEB_APP_URL_Main}?action=getHomeworkByCourse&courseId=${student.courseId}`);
+            const result = await response.json();
+
+            const container = document.getElementById('tasks-list');
+            if (result.result === "success" && result.data.length > 0) {
+                container.innerHTML = result.data.map(hw => `
+                    <div class="stat-card" style="text-align: right; border-right: 5px solid var(--accent);">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <strong style="color: var(--primary);">${hw.title}</strong>
+                            <span class="badge bg-warning text-dark">${hw.status}</span>
+                        </div>
+                        <p style="font-size: 0.8rem; color: #666; margin-top: 5px;">
+                            <i class="fa-regular fa-clock"></i> آخر موعد: ${hw.dueDate}
+                        </p>
+                        <button class="btn btn-sm btn-outline-primary w-100 mt-2">عرض التفاصيل</button>
+                    </div>
+                `).join('');
+            } else {
+                container.innerHTML = `<div class="stat-card">🙌 لا يوجد واجبات منشورة حالياً لهذه الدورة.</div>`;
+            }
+        } catch (error) {
+            console.error("Error fetching tasks:", error);
+        }
+    })();
+</script>
+
+
