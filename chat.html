@@ -278,30 +278,31 @@
     }
 
     
-    
     document.addEventListener("DOMContentLoaded", function () {
     const savedId = localStorage.getItem('chat_user_id');
     const input = document.getElementById('idInput');
-    const form = document.getElementById('loginForm');
 
     if (savedId && input) {
         input.value = savedId;
+        ['input', 'change', 'blur'].forEach(eventType => {
+            input.dispatchEvent(new Event(eventType, { bubbles: true, cancelable: true }));
+        });
 
-        input.dispatchEvent(new Event('input', { bubbles: true }));
-        input.dispatchEvent(new Event('change', { bubbles: true }));
-        input.dispatchEvent(new Event('blur'));
-
-        if (form) {
-            setTimeout(() => {
-                form.submit();
-            }, 300);
-        }
+        // زيادة التأخير بسبب iframe
+        setTimeout(() => {
+            const loginButton = document.querySelector('#loginScreen button');
+            if (loginButton) {
+                loginButton.click();
+            }
+        }, 500); // 500ms لتجنب مشاكل iframe
     }
 });
+    
     
     
 </script>
 </body>
 </html>
+
 
 
