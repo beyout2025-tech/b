@@ -180,8 +180,31 @@
             container.appendChild(drop);
         }
     }
+    
+    
+    
+    function loadStudentDashboard(studentId) {
+  google.script.run.withSuccessHandler(function(summary) {
+    document.getElementById('attendance-rate').innerText = summary.attendanceRate;
+    document.getElementById('completed-tasks').innerText = summary.completedTasks;
+    document.getElementById('overall-grade').innerText = summary.overallGrade;
+    
+    // تحديث شريط التقدم
+    document.getElementById('progress-bar').style.width = summary.progress + "%";
+    document.getElementById('progress-text').innerText = summary.progress + "% من المنهج تم تغطيته";
+    
+  }).getStudentAcademicSummary(studentId);
+}
+
+    
+    
+    
+    
+    
+    
 </script>
 
 
 </body>
 </html>
+
