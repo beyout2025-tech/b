@@ -277,8 +277,29 @@
         document.getElementById('msgBox').innerHTML = `<div style="text-align:center; color:#999; margin-top:120px;">اختر محادثة للبدء</div>`;
     }
 
-    function logout() { localStorage.clear(); location.reload(); }
-    window.onload = () => { if(localStorage.getItem('chat_user_id')) { document.getElementById('idInput').value = localStorage.getItem('chat_user_id'); login(); } }
+    
+    
+    document.addEventListener("DOMContentLoaded", function () {
+    const savedId = localStorage.getItem('chat_user_id');
+    const input = document.getElementById('idInput');
+    const form = document.getElementById('loginForm');
+
+    if (savedId && input) {
+        input.value = savedId;
+
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+        input.dispatchEvent(new Event('blur'));
+
+        if (form) {
+            setTimeout(() => {
+                form.submit();
+            }, 300);
+        }
+    }
+});
+    
+    
 </script>
 </body>
 </html>
