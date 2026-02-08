@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>بوابة التميز | منصة كن أنت</title>
-     <link rel="stylesheet" href="assets/fonts/tajawal.css">
+    <link rel="stylesheet" href="assets/fonts/tajawal.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="js/url.js"></script>
     <style>
@@ -243,6 +243,9 @@
         fetch(loginUrl).then(res => res.json()).then(data => {
             if (data.result === "success") {
                 localStorage.setItem('student_session', JSON.stringify(data.data));
+                const myId = data.data.id; 
+        localStorage.setItem('chat_user_id', myId);
+
                 window.location.href = "home.html";
             } else { throw new Error(data.message); }
         }).catch(err => {
@@ -256,6 +259,4 @@
 </script>
 </body>
 </html>
-
-
 
