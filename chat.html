@@ -5,17 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>نظام التواصل المتكامل</title>
     <script src="js/url.js"></script>
-     <link rel="stylesheet" href="assets/fonts/tajawal.css">
+    <link rel="stylesheet" href="assets/fonts/tajawal.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root { --primary: #075e54; --secondary: #128c7e; --bg-chat: #e5ddd5; --light: #f0f2f5; }
-        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Tajawal', sans-serif; background: #d1d7db; overflow: hidden; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Tajawal', sans-serif !important; }
+        body, html { height: 100%; background: #d1d7db; overflow: hidden; }
 
         /* شاشة الدخول */
         #loginScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--primary); display: flex; justify-content: center; align-items: center; z-index: 10000; }
         .login-card { background: white; padding: 30px; border-radius: 15px; text-align: center; width: 320px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-        .login-card input { width: 100%; padding: 12px; margin: 15px 0; border: 1px solid #ddd; border-radius: 8px; outline: none; box-sizing: border-box; font-family: 'Tajawal'; }
-        .login-card button { background: var(--secondary); color: white; border: none; padding: 12px; border-radius: 8px; width: 100%; cursor: pointer; font-weight: bold; font-family: 'Tajawal'; }
+        .login-card input { width: 100%; padding: 12px; margin: 15px 0; border: 1px solid #ddd; border-radius: 8px; outline: none; }
+        .login-card button { background: var(--secondary); color: white; border: none; padding: 12px; border-radius: 8px; width: 100%; cursor: pointer; font-weight: bold; }
 
         .app-container { display: none; flex-direction: column; height: 100vh; background: white; }
         .main-header { background: var(--primary); color: white; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; }
@@ -28,8 +29,8 @@
 
         .horizontal-list { display: flex; overflow-x: auto; padding: 12px; gap: 18px; border-bottom: 1px solid #eee; background: #fff; scrollbar-width: none; }
         .list-item { display: flex; flex-direction: column; align-items: center; min-width: 75px; cursor: pointer; }
-        .avatar-container { width: 58px; height: 58px; border-radius: 50%; margin-bottom: 6px; }
-        .list-item img, .icon-placeholder { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2.5px solid transparent; }
+        .avatar-container { width: 58px; height: 58px; border-radius: 50%; margin-bottom: 6px; overflow: hidden; }
+        .list-item img, .icon-placeholder { width: 100%; height: 100%; object-fit: cover; border: 2.5px solid transparent; border-radius: 50%; }
         .list-item span { font-size: 11px; font-weight: 700; color: #333; width: 80px; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .icon-placeholder { background: #dfe5e7; display: flex; align-items: center; justify-content: center; color: #919191; font-size: 24px; }
 
@@ -37,23 +38,17 @@
         .chat-header { background: var(--light); padding: 10px 18px; display: none; align-items: center; gap: 14px; border-bottom: 1px solid #ddd; z-index: 5; }
         .messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
         
-        /* فقاعات المحادثة (للقنوات والزملاء) */
         .bubble { max-width: 78%; padding: 10px 14px; border-radius: 12px; font-size: 14.5px; position: relative; box-shadow: 0 1.5px 2px rgba(0,0,0,0.1); }
         .bubble.mine { align-self: flex-end; background: #dcf8c6; border-top-left-radius: 0; }
         .bubble.theirs { align-self: flex-start; background: white; border-top-right-radius: 0; }
         .bubble .sender { font-size: 10.5px; font-weight: 700; color: var(--secondary); display: block; margin-bottom: 4px; }
 
-        /* تنسيق البريد (Gmail Style) */
         .mail-card { background: white; margin: 8px 12px; padding: 16px; border-radius: 12px; border-right: 6px solid var(--secondary); box-shadow: 0 3px 8px rgba(0,0,0,0.06); }
-        .mail-sender { font-weight: bold; font-size: 14px; color: var(--secondary); margin-bottom: 6px; display: block; }
-        .mail-text { font-size: 14px; color: #333; line-height: 1.5; }
-        .mail-date { font-size: 10px; color: #999; margin-top: 10px; text-align: left; display: block; }
-
-        /* الزر العائم للبريد */
+        
         .fab { position: absolute; bottom: 25px; left: 25px; background: var(--secondary); color: white; width: 55px; height: 55px; border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); cursor: pointer; z-index: 100; }
 
         .input-area { padding: 12px 18px; background: var(--light); display: none; gap: 12px; align-items: center; }
-        .input-area input { flex: 1; padding: 12px 18px; border: 1px solid #ddd; border-radius: 25px; outline: none; font-family: 'Tajawal'; }
+        .input-area input { flex: 1; padding: 12px 18px; border: 1px solid #ddd; border-radius: 25px; outline: none; }
         .send-btn { background: var(--secondary); color: white; border: none; width: 48px; height: 48px; border-radius: 50%; cursor: pointer; }
 
         #lockScreen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.96); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 20; text-align: center; }
@@ -64,7 +59,7 @@
 <div id="loginScreen">
     <div class="login-card">
         <i class="fa-solid fa-comments-alt fa-4x" style="color: var(--primary);"></i>
-        <h2>مرحباً بك</h2>
+        <h2 style="margin-top:15px;">مرحباً بك</h2>
         <input type="text" id="idInput" placeholder="أدخل ID الخاص بك...">
         <button onclick="login()">دخول للنظام</button>
     </div>
@@ -76,7 +71,7 @@
             <div id="myPic"><i class="fa-solid fa-user-circle fa-2x"></i></div>
             <span id="myName" style="font-weight: 700;">جاري التحميل...</span>
         </div>
-        <i class="fa-solid fa-sign-out-alt" onclick="logout()" style="cursor:pointer;"></i>
+        <i class="fa-solid fa-house-user" onclick="logout()" style="cursor:pointer; font-size: 1.4rem;"></i>
     </div>
 
     <div class="tabs">
@@ -91,7 +86,7 @@
         <div class="chat-header" id="chatHeader">
             <i class="fa-solid fa-arrow-right back-btn" onclick="closeChat()" style="cursor:pointer; color:var(--secondary)"></i>
             <div id="activeChatPic"></div>
-            <div style="flex:1"><span class="name" id="activeChatName" style="font-weight:700"></span></div>
+            <div style="flex:1; margin-right:10px;"><span class="name" id="activeChatName" style="font-weight:700"></span></div>
         </div>
 
         <div id="lockScreen">
@@ -114,52 +109,68 @@
 <div id="composeModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 20000;">
     <div style="background: white; padding: 25px; border-radius: 15px; width: 90%; max-width: 400px;">
         <h3>رسالة جديدة للإدارة</h3>
-        <textarea id="mailBody" placeholder="اكتب رسالتك هنا..." style="width: 100%; height: 120px; border-radius: 8px; border: 1px solid #ddd; padding: 10px; font-family:'Tajawal'; resize:none;"></textarea>
+        <textarea id="mailBody" placeholder="اكتب رسالتك هنا..." style="width: 100%; height: 120px; border-radius: 8px; border: 1px solid #ddd; padding: 10px; margin-top:10px; resize:none;"></textarea>
         <div style="display:flex; gap:10px; margin-top:15px;">
-            <button onclick="sendNewMail()" style="flex:1; background:var(--secondary); color:white; border:none; padding:10px; border-radius:8px;">إرسال</button>
-            <button onclick="closeCompose()" style="flex:1; background:#eee; border:none; padding:10px; border-radius:8px;">إلغاء</button>
+            <button onclick="sendNewMail()" style="flex:1; background:var(--secondary); color:white; border:none; padding:10px; border-radius:8px; cursor:pointer;">إرسال</button>
+            <button onclick="closeCompose()" style="flex:1; background:#eee; border:none; padding:10px; border-radius:8px; cursor:pointer;">إلغاء</button>
         </div>
     </div>
 </div>
 
 <script>
-    
     let myId = "", activeChat = null, currentTab = 'public', usersMap = {};
 
-    function login() {
-        myId = document.getElementById('idInput').value;
-        if(!myId) return alert("أدخل المعرف");
-        localStorage.setItem('chat_user_id', myId);
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('appInterface').style.display = 'flex';
-        init();
+    // 1. الدخول والتحقق
+    async function login() {
+        const idInput = document.getElementById('idInput');
+        const loginBtn = document.querySelector('.login-card button');
+        myId = idInput.value.trim();
+
+        if (!myId) return alert("يرجى إدخال المعرف");
+
+        loginBtn.disabled = true;
+        loginBtn.innerText = "جاري التحقق...";
+
+        try {
+            const response = await fetch(`${API}?action=verifyUser&studentId=${myId}`);
+            const result = await response.json();
+
+            if (result.success) {
+                localStorage.setItem('chat_user_id', myId);
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('appInterface').style.display = 'flex';
+                document.getElementById('myName').innerText = result.name;
+                if(result.avatar) {
+                    document.getElementById('myPic').innerHTML = `<img src="${result.avatar}" style="width:40px; height:40px; border-radius:50%">`;
+                }
+                await init(); 
+            } else {
+                alert(result.message || "المعرف غير صحيح");
+                loginBtn.disabled = false;
+                loginBtn.innerText = "دخول للنظام";
+            }
+        } catch (error) {
+            alert("خطأ في الاتصال بالسيرفر");
+            loginBtn.disabled = false;
+        }
     }
 
     async function init() {
         await fetchUsers();
-        fetchMyInfo();
         loadList();
     }
 
     async function fetchUsers() {
-        const res = await fetch(`${API}?action=getChatUsers`);
-        const data = await res.json();
-        data.forEach(u => usersMap[u.id] = { name: u.name, avatar: u.avatar });
+        try {
+            const res = await fetch(`${API}?action=getChatUsers&studentId=${myId}`);
+            const data = await res.json();
+            data.forEach(u => usersMap[u.id] = { name: u.name, avatar: u.avatar });
+        } catch(e) { console.error("Error fetching users"); }
     }
 
-    function fetchMyInfo() {
-        const me = usersMap[myId];
-        if(me) {
-            document.getElementById('myName').innerText = me.name;
-            if(me.avatar) document.getElementById('myPic').innerHTML = `<img src="${me.avatar}">`;
-        }
-    }
-
+    // 2. إدارة القوائم والتبويبات
     async function loadList() {
         const list = document.getElementById('hList');
-        const box = document.getElementById('msgBox');
-        
-        // إذا كان البريد، نعالج التنسيق المختلف
         if(currentTab === 'private') {
             list.style.display = 'none';
             document.getElementById('composeMailBtn').style.display = 'flex';
@@ -169,79 +180,124 @@
 
         list.style.display = 'flex';
         document.getElementById('composeMailBtn').style.display = 'none';
-        list.innerHTML = "<span style='font-size:12px; padding:15px; color:#888;'>جاري الجلب...</span>";
+        list.innerHTML = "<div style='padding:20px; font-size:12px; color:#888;'>جاري التحميل...</div>";
         
-        // الكود الأصلي للجلب
-        let url = currentTab === 'users' ? `${API}?action=getChatUsers` : `${API}?action=getUserChannels&studentId=ALL`;
+        let url = currentTab === 'users' ? 
+            `${API}?action=getChatUsers&studentId=${myId}` : 
+            `${API}?action=getUserChannels&studentId=${myId}`;
         
+        try {
         const res = await fetch(url);
         const data = await res.json();
-
-        let filtered = data;
-        if(currentTab === 'public') filtered = data.filter(i => i.type === 'public');
-
-        list.innerHTML = filtered.map(item => `
-            <div class="list-item" onclick="openChat('${item.id}', '${item.name}', '${item.avatar}', '${item.type}')">
-                <div class="avatar-container">
-                    ${item.avatar ? `<img src="${item.avatar}">` : `<div class="icon-placeholder"><i class="fa-solid ${item.type==='public'?'fa-hashtag':'fa-user'}"></i></div>`}
-                </div>
-                <span>${item.name}</span>
-            </div>
-        `).join('');
-    }
-
-    async function loadPrivateInbox() {
-        const box = document.getElementById('msgBox');
-        box.innerHTML = "<div style='text-align:center; padding:50px;'>جاري جلب البريد...</div>";
         
-        const channelId = `PRIV-${Math.min(myId, "ADMIN")}-${Math.max(myId, "ADMIN")}`;
-        const res = await fetch(`${API}?action=getMessages&studentId=${myId}&channelId=${channelId}`);
-        const data = await res.json();
+        list.innerHTML = data.map(item => {
+            // تخزين بيانات المستخدمين في الخريطة لاستخدام أسمائهم لاحقاً في الفقاعات
+            usersMap[item.id] = { name: item.name, avatar: item.avatar };
 
-        box.innerHTML = data.reverse().map(m => `
-            <div class="mail-card">
-                <span class="mail-sender">${m.sender == myId ? 'رسالتي' : 'رد الإدارة'}</span>
-                <div class="mail-text">${m.content}</div>
-                <span class="mail-date">${new Date(m.time).toLocaleString()}</span>
-            </div>
-        `).join('');
+            return `
+                <div class="list-item" onclick="openChat('${item.id}', '${item.name}', '${item.avatar || ''}', '${item.type}')">
+                    <div class="avatar-container" style="position:relative;">
+                        ${item.avatar ? `<img src="${item.avatar}">` : `<div class="icon-placeholder"><i class="fa-solid fa-user"></i></div>`}
+                        ${item.isOnline ? '<div style="background:#4CAF50; position:absolute; bottom:2px; right:2px; width:12px; height:12px; border-radius:50%; border:2px solid white;"></div>' : ''}
+                    </div>
+                    <span>${item.name}</span>
+                    <small style="font-size:9px; color:#888;">${item.status || ''}</small>
+                </div>
+            `;
+        }).join('');
+        
+
+        } catch(e) { list.innerHTML = "خطأ في التحميل"; }
     }
 
+    // 3. إدارة المحادثات والرسائل
     async function openChat(id, name, avatar, type) {
-        document.getElementById('lockScreen').style.display = 'none';
-        document.getElementById('chatHeader').style.display = 'flex';
-        document.getElementById('inputArea').style.display = 'flex';
-        document.getElementById('activeChatName').innerText = name;
-        document.getElementById('activeChatPic').innerHTML = avatar ? `<img src="${avatar}" style="width:38px; height:38px; border-radius:50%">` : `<i class="fa-solid fa-hashtag fa-2x" style="color:#ccc"></i>`;
-
-        let finalId = id;
-        if(currentTab === 'users') finalId = `PRIV-${Math.min(myId, id)}-${Math.max(myId, id)}`;
-        activeChat = { id: finalId, name, type };
-        loadMessages();
+    document.getElementById('lockScreen').style.display = 'none';
+    document.getElementById('chatHeader').style.display = 'flex';
+    document.getElementById('inputArea').style.display = 'flex';
+    document.getElementById('activeChatName').innerText = name;
+    
+    let finalId = id;
+    if(currentTab === 'users') {
+        // تحويل المعرفات لأرقام لضمان الترتيب الصحيح (2 قبل 10)
+        const id1 = parseInt(myId);
+        const id2 = parseInt(id);
+        const small = Math.min(id1, id2);
+        const big = Math.max(id1, id2);
+        finalId = `PRIV-${small}-${big}`;
     }
+
+    activeChat = { id: finalId, name, type };
+    
+    // تفريغ الصندوق وإظهار مؤشر تحميل
+    document.getElementById('msgBox').innerHTML = "<div style='text-align:center; padding:20px; color:#666;'>جاري فتح المحادثة...</div>";
+    
+    await loadMessages();
+}
+
+
 
     async function loadMessages() {
-        const box = document.getElementById('msgBox');
+    if(!activeChat) return;
+    try {
         const res = await fetch(`${API}?action=getMessages&studentId=${myId}&channelId=${activeChat.id}`);
         const data = await res.json();
 
-        if(data.success === false) {
+        if(data.success === false || data.error === "private_channel") {
             document.getElementById('lockScreen').style.display = 'flex';
             document.getElementById('inputArea').style.display = 'none';
-            box.innerHTML = "";
             return;
         }
 
-        box.innerHTML = data.map(m => `
-            <div class="bubble ${m.sender == myId ? 'mine' : 'theirs'}">
-                <span class="sender">${usersMap[m.sender]?.name || m.sender}</span>
-                ${m.content}
-                <div style="font-size:9px; color:#888; margin-top:5px;">${new Date(m.time).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>
-            </div>
-        `).join('');
+        const messages = Array.isArray(data) ? data : [];
+        const box = document.getElementById('msgBox');
+        
+        if(messages.length === 0) {
+            box.innerHTML = `<div style="text-align:center; color:#999; margin-top:50px;">لا توجد رسائل سابقة</div>`;
+        } else {
+            box.innerHTML = messages.map(m => {
+                // جلب بيانات المرسل من الخريطة
+                const senderInfo = usersMap[m.sender] || { name: m.sender, avatar: "" };
+                const isMine = m.sender == myId;
+                
+                return `
+                <div class="bubble ${isMine ? 'mine' : 'theirs'}">
+                    <span class="sender">${isMine ? 'أنا' : senderInfo.name}</span>
+                    ${m.content}
+                    <div style="font-size:9px; color:#888; margin-top:5px; text-align:left; direction:ltr;">
+                        ${m.time}
+                    </div>
+                </div>`;
+            }).join('');
+        }
         box.scrollTop = box.scrollHeight;
+    } catch(e) { console.error("Error:", e); }
+}
+
+
+
+
+    async function send() {
+        const inp = document.getElementById('msgInput');
+        if(!inp.value.trim() || !activeChat) return;
+        const txt = inp.value; inp.value = "";
+        
+        try {
+            await fetch(API, { 
+                method: 'POST', 
+                body: JSON.stringify({ 
+                    action: "sendMessage", 
+                    senderId: myId, 
+                    channelId: activeChat.id, 
+                    content: txt,
+                    attachments: [] 
+                }) 
+            });
+            loadMessages();
+        } catch(e) { alert("فشل الإرسال"); }
     }
 
+    // 4. البريد الداخلي والتبديل
     function switchTab(t) {
         currentTab = t;
         document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
@@ -250,25 +306,94 @@
         loadList();
     }
 
-    async function send() {
-        const inp = document.getElementById('msgInput');
-        if(!inp.value || !activeChat) return;
-        const txt = inp.value; inp.value = "";
-        await fetch(API, { method: 'POST', body: JSON.stringify({ action:"sendMessage", senderId:myId, channelId:activeChat.id, content:txt }) });
-        loadMessages();
+    
+async function loadPrivateInbox() {
+    const box = document.getElementById('msgBox');
+    box.innerHTML = "<div style='text-align:center; padding:50px;'>جاري جلب البريد...</div>";
+    
+    try {
+        const res = await fetch(`${API}?action=fetchMailbox&studentId=${myId}`);
+        const data = await res.json();
+        
+        if (!data || data.length === 0) {
+            box.innerHTML = "<div style='text-align:center; padding:50px; color:#888;'>صندوق البريد فارغ</div>";
+            return;
+        }
+
+        box.innerHTML = data.map(m => {
+            // التحقق الجوهري: هل المرسل هو الطالب (صاحب الحساب)؟
+            // نستخدم معرف الطالب (العمود 6) أو نوع المرسل (العمود 5) للتمييز
+            const isFromMe = (String(m.senderType) === "طالب"); 
+            
+            return `
+                <div class="mail-card" style="border-right: 6px solid ${isFromMe ? '#075e54' : '#e67e22'}; background: ${isFromMe ? '#ffffff' : '#fff9f2'}">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-weight:bold; color:${isFromMe ? '#075e54' : '#e67e22'}; font-size:13px;">
+                            ${isFromMe ? '<i class="fa-solid fa-paper-plane"></i> رسالتي' : '<i class="fa-solid fa-reply"></i> رد الإدارة'}
+                        </span>
+                        <span style="font-size:10px; color:#999;">${m.time}</span>
+                    </div>
+                    
+                    <div style="margin-top:8px; font-size:14px; color:#333; line-height:1.5; font-weight:500;">
+                        ${m.content}
+                    </div>
+                    
+                    <div style="display:flex; justify-content:flex-end; margin-top:10px;">
+                        <span style="font-size:10px; padding:2px 8px; background:#eee; border-radius:10px; color:#666;">
+                            ${m.status}
+                        </span>
+                    </div>
+
+                    ${!isFromMe ? `
+                    <button onclick="openReply('${m.msgId}', '${m.conversationId}', '${m.subject}')" 
+                            style="margin-top:12px; padding:8px; border:1px solid #ddd; border-radius:8px; background:white; cursor:pointer; font-size:12px; font-weight:bold; color:#555; width:100%;">
+                        <i class="fa-solid fa-reply"></i> رد سريع على الإدارة
+                    </button>` : ''}
+                </div>
+            `;
+        }).join('');
+    } catch(e) { 
+        box.innerHTML = "<div style='text-align:center; padding:20px; color:red;'>حدث خطأ في عرض البريد</div>"; 
     }
+}
+
+
+
+
+
+    async function sendNewMail() {
+    const body = document.getElementById('mailBody').value;
+    if(!body) return;
+
+    // تجهيز البيانات لتطابق الأعمدة الـ 28 في السيرفر
+    const payload = {
+        action: "sendInternalMail",
+        senderName: document.getElementById('myName').innerText,
+        studentId: myId,
+        content: body,
+        subject: "رسالة جديدة",
+        receiverId: "ADMIN" // لضمان وصولها للوحة الإدارة
+    };
+
+    try {
+        const res = await fetch(API, { 
+            method: 'POST', 
+            body: JSON.stringify(payload) 
+        });
+        const result = await res.json();
+        if(result.success) {
+            alert("تم إرسال رسالتك بنجاح");
+            closeCompose();
+            loadPrivateInbox();
+        }
+    } catch(e) { 
+        alert("حدث خطأ أثناء الإرسال"); 
+    }
+}
+
 
     function openCompose() { document.getElementById('composeModal').style.display = 'flex'; }
     function closeCompose() { document.getElementById('composeModal').style.display = 'none'; }
-
-    async function sendNewMail() {
-        const body = document.getElementById('mailBody').value;
-        if(!body) return;
-        const channelId = `PRIV-${Math.min(myId, "ADMIN")}-${Math.max(myId, "ADMIN")}`;
-        await fetch(API, { method:'POST', body: JSON.stringify({ action:"sendMessage", senderId:myId, channelId:channelId, content:body }) });
-        alert("تم الإرسال"); closeCompose(); loadPrivateInbox();
-    }
-
     function closeChat() {
         activeChat = null;
         document.getElementById('chatHeader').style.display = 'none';
@@ -277,33 +402,148 @@
         document.getElementById('msgBox').innerHTML = `<div style="text-align:center; color:#999; margin-top:120px;">اختر محادثة للبدء</div>`;
     }
 
-    
+    function logout() { window.location.href = "home.html"; }
+
     document.addEventListener("DOMContentLoaded", function () {
-    const savedId = localStorage.getItem('chat_user_id');
-    const input = document.getElementById('idInput');
+        const savedId = localStorage.getItem('chat_user_id');
+        if (savedId) {
+            document.getElementById('idInput').value = savedId;
+            setTimeout(() => { document.querySelector('#loginScreen button').click(); }, 300);
+        }
+    });
+    
+    
+    
+    
+    // دالة لفتح نافذة الرد وتجهيز البيانات
+function openReply(msgId, convId, subject) {
+    const replyBody = prompt("اكتب ردك للإدارة:"); // يمكنك استبدالها بـ Modal احترافي لاحقاً
+    if (!replyBody) return;
 
-    if (savedId && input) {
-        input.value = savedId;
-        ['input', 'change', 'blur'].forEach(eventType => {
-            input.dispatchEvent(new Event(eventType, { bubbles: true, cancelable: true }));
+    sendReply(msgId, convId, subject, replyBody);
+}
+
+// دالة إرسال الرد للسيرفر
+async function sendReply(originalMsgId, content) {
+    const payload = {
+        action: "replyToMail", // نفس الاسم الموجود في switch/case بـ doPost
+        originalMsgId: originalMsgId,
+        replyData: {
+            content: content,
+            senderName: document.getElementById('myName').innerText,
+            studentId: myId,
+            senderType: "طالب",
+            receiverId: "ADMIN",
+            receiverName: "الإدارة",
+            subject: "رد على رسالة",
+            priority: "عادية"
+        }
+    };
+
+    try {
+        const response = await fetch(API, {
+            method: 'POST',
+            body: JSON.stringify(payload)
         });
+        const res = await response.json();
+        if(res.success) {
+            alert("تم إرسال الرد بنجاح");
+            loadPrivateInbox(); // تحديث القائمة فوراً
+        }
+    } catch (e) {
+        console.error("خطأ في الإرسال:", e);
+    }
+}
 
-        // زيادة التأخير بسبب iframe
-        setTimeout(() => {
-            const loginButton = document.querySelector('#loginScreen button');
-            if (loginButton) {
-                loginButton.click();
+
+    
+    
+    
+    
+
+    
+    
+    
+let lastStatus = null;
+let heartbeatInterval = null;
+const HEARTBEAT_TIME = 20000;
+
+// إرسال الحالة للسيرفر
+function sendStatusUpdate(status, retry = true) {
+    if (!myId) return;
+
+    if (lastStatus === status) return;
+    lastStatus = status;
+
+    const url = `${API}?action=updateStatus&studentId=${myId}&status=${status}`;
+
+    if (navigator.sendBeacon && status === 'أوفلاين') {
+        navigator.sendBeacon(url);
+        return;
+    }
+
+    fetch(url, { keepalive: true })
+        .catch(() => {
+            if (retry) {
+                setTimeout(() => sendStatusUpdate(status, false), 3000);
             }
-        }, 500); // 500ms لتجنب مشاكل iframe
+        });
+}
+
+
+// مراقبة رؤية الصفحة
+document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+        startHeartbeat();
+        sendStatusUpdate('متصل');
+    } else {
+        stopHeartbeat();
+        sendStatusUpdate('أوفلاين');
     }
 });
-    
+
+
+// مراقبة اتصال الإنترنت
+window.addEventListener('online', () => {
+    startHeartbeat();
+    sendStatusUpdate('متصل');
+});
+
+window.addEventListener('offline', () => {
+    stopHeartbeat();
+    sendStatusUpdate('أوفلاين');
+});
+
+
+// Heartbeat
+function startHeartbeat() {
+    if (heartbeatInterval) return;
+
+    heartbeatInterval = setInterval(() => {
+        sendStatusUpdate('متصل');
+    }, HEARTBEAT_TIME);
+}
+
+function stopHeartbeat() {
+    clearInterval(heartbeatInterval);
+    heartbeatInterval = null;
+}
+
+
+// عند فتح الصفحة
+window.addEventListener('load', () => {
+    startHeartbeat();
+    sendStatusUpdate('متصل');
+});
+
+
+// عند الإغلاق
+window.addEventListener('beforeunload', () => {
+    sendStatusUpdate('أوفلاين');
+});
+
     
     
 </script>
 </body>
 </html>
-
-
-
-
